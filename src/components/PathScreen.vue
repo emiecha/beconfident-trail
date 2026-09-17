@@ -4,7 +4,7 @@
       <div class="path__chrome">
         <p class="path__crumb">B1 · Travel</p>
         <button class="streak" type="button" @click="$emit('streak')">
-          <img class="streak__icon" src="/figma/icon-flame.svg" width="16" height="16" alt="" />
+          <img class="streak__icon" src="./figma/icon-flame.svg" width="16" height="16" alt="" />
           <span>2 days</span>
         </button>
       </div>
@@ -34,7 +34,6 @@
           <button
             class="card__head"
             type="button"
-            :disabled="mod.state === 'locked'"
             :aria-expanded="isOpen(mod)"
             @click="toggle(mod)"
           >
@@ -48,11 +47,9 @@
             </div>
             <span v-if="mod.state === 'current'" class="card__now">Now</span>
             <i
-              v-else-if="mod.state === 'done'"
               class="ri-arrow-down-s-line card__chevron"
               :class="{ 'card__chevron--open': isOpen(mod) }"
             />
-            <i v-else class="ri-lock-2-line card__lock" />
           </button>
 
           <div class="card__track" aria-hidden="true">
@@ -150,6 +147,10 @@ const modules = [
     lessons: [
       { id: 'h1', state: 'locked', title: 'Check in at reception' },
       { id: 'h2', state: 'locked', title: 'Ask for the wifi' },
+      { id: 'h3', state: 'locked', title: 'Request extra towels' },
+      { id: 'h4', state: 'locked', title: 'Report a problem' },
+      { id: 'h5', state: 'locked', title: 'Order room service' },
+      { id: 'h6', state: 'locked', title: 'Check out' },
     ],
   },
   {
@@ -164,6 +165,11 @@ const modules = [
     tint: 'linear-gradient(135deg, #605c71, #928fa3)',
     lessons: [
       { id: 'c1', state: 'locked', title: 'Buy a metro ticket' },
+      { id: 'c2', state: 'locked', title: 'Ask which line to take' },
+      { id: 'c3', state: 'locked', title: 'Change trains' },
+      { id: 'c4', state: 'locked', title: 'Missed your stop' },
+      { id: 'c5', state: 'locked', title: 'Take a taxi' },
+      { id: 'c6', state: 'locked', title: 'Read a map' },
     ],
   },
 ];
@@ -171,12 +177,10 @@ const modules = [
 const openId = ref('nyc');
 
 function isOpen(mod) {
-  if (mod.state === 'locked') return false;
   return openId.value === mod.id;
 }
 
 function toggle(mod) {
-  if (mod.state === 'locked') return;
   openId.value = openId.value === mod.id ? null : mod.id;
 }
 </script>
@@ -358,7 +362,7 @@ function toggle(mod) {
 }
 
 .mod--locked .card {
-  opacity: 0.72;
+  opacity: 1;
 }
 
 .card__head {
@@ -367,10 +371,7 @@ function toggle(mod) {
   gap: 12px;
   width: 100%;
   text-align: left;
-}
-
-.card__head:disabled {
-  cursor: default;
+  cursor: pointer;
 }
 
 .card__icon {

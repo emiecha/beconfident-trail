@@ -11,19 +11,19 @@
 
     <header class="twins__top">
       <button class="back" type="button" aria-label="Back" @click="$emit('close')">
-        <img src="/figma/icon-back.svg" width="24" height="24" alt="" />
+        <img src="./figma/icon-back.svg" width="24" height="24" alt="" />
       </button>
       <button class="pause" type="button" @click="paused = !paused">
-        <img src="/figma/icon-pause-twin.svg" width="16" height="16" alt="" />
+        <img src="./figma/icon-pause-twin.svg" width="16" height="16" alt="" />
         {{ paused ? 'Play' : 'Pause' }}
       </button>
     </header>
 
     <div class="twins__body">
       <div v-if="active.logos" class="logos" aria-hidden="true">
-        <img class="logos__side" src="/figma/twin-logo-1.png" width="48" height="48" alt="" />
-        <img class="logos__mid" src="/figma/twin-logo-2.png" width="56" height="56" alt="" />
-        <img class="logos__side" src="/figma/twin-logo-3.png" width="48" height="48" alt="" />
+        <img class="logos__side" src="./figma/twin-logo-1.png" width="48" height="48" alt="" />
+        <img class="logos__mid" src="./figma/twin-logo-2.png" width="56" height="56" alt="" />
+        <img class="logos__side" src="./figma/twin-logo-3.png" width="48" height="48" alt="" />
       </div>
 
       <h1>{{ active.name }}</h1>
@@ -45,7 +45,7 @@
             <img
               v-if="twin.id === activeId"
               class="face__sel"
-              src="/figma/twin-selector.svg"
+              src="./figma/twin-selector.svg"
               width="88"
               height="88"
               alt=""
@@ -58,11 +58,11 @@
 
       <div class="actions">
         <button class="btn btn--talk" type="button" @click="$emit('talk', active.name)">
-          <img src="/figma/icon-talk.svg" width="20" height="20" alt="" />
+          <img src="./figma/icon-talk.svg" width="20" height="20" alt="" />
           Talk
         </button>
         <button class="btn btn--learn" type="button">
-          <img src="/figma/icon-learn.svg" width="20" height="20" alt="" />
+          <img src="./figma/icon-learn.svg" width="20" height="20" alt="" />
           Learn
         </button>
       </div>
@@ -87,24 +87,24 @@ const twins = [
     name: 'Gina',
     short: 'Gina',
     teaches: 'Teaches communication',
-    hero: '/figma/twin-gina.png',
-    avatar: '/figma/twin-gina.png',
+    hero: './figma/twin-gina.png',
+    avatar: './figma/twin-gina.png',
   },
   {
     id: 'doug',
     name: 'Doug Scherrer',
     short: 'Doug',
     teaches: 'Teaches investing',
-    hero: '/figma/twin-doug.png',
-    avatar: '/figma/twin-doug.png',
+    hero: './figma/twin-doug.png',
+    avatar: './figma/twin-doug.png',
   },
   {
     id: 'brian',
     name: 'Brian Requarth',
     short: 'Brian',
     teaches: 'Teaches entrepreneurship',
-    hero: '/figma/twin-brian.png',
-    avatar: '/figma/master-brian.png',
+    hero: './figma/twin-brian.png',
+    avatar: './figma/master-brian.png',
     logos: true,
     badge: 'New!',
   },
@@ -113,16 +113,16 @@ const twins = [
     name: 'Daiane dos Santos',
     short: 'Daiane',
     teaches: 'Teaches sport',
-    hero: '/figma/twin-daiane.png',
-    avatar: '/figma/twin-daiane.png',
+    hero: './figma/twin-daiane.png',
+    avatar: './figma/twin-daiane.png',
   },
   {
     id: 'bortoleto',
     name: 'Bortoleto',
     short: 'Bortoleto',
     teaches: 'Teaches motorsport',
-    hero: '/figma/twin-bortoleto.png',
-    avatar: '/figma/twin-bortoleto.png',
+    hero: './figma/twin-bortoleto.png',
+    avatar: './figma/twin-bortoleto.png',
   },
 ];
 

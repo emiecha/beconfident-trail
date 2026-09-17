@@ -2,7 +2,7 @@
   <button class="invite" type="button" @click="$emit('click')">
     <img
       class="invite__glow"
-      src="/figma/glow-ellipse.svg"
+      src="./figma/glow-ellipse.svg"
       width="137"
       height="137"
       alt=""

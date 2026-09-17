@@ -7,10 +7,10 @@
     <div class="tiles">
       <InviteFriendsTile
         label="Invite&#10;friends"
-        icon="/figma/smiley-happy-plus.svg"
+        icon="./figma/smiley-happy-plus.svg"
         @click="$emit('invite')"
       />
-      <InviteFriendsTile label="Ranking" icon="/figma/icon-trophy.svg" @click="$emit('ranking')" />
+      <InviteFriendsTile label="Ranking" icon="./figma/icon-trophy.svg" @click="$emit('ranking')" />
       <InviteFriendsTile label="Passport" remix="ri-passport-line" />
     </div>
 
@@ -41,10 +41,10 @@
       <h2 class="block-title">Today’s event</h2>
 
       <article class="hero">
-        <img class="hero__photo" src="/figma/event-today.png" width="350" height="409" alt="" />
+        <img class="hero__photo" src="./figma/event-today.png" width="350" height="409" alt="" />
         <div class="hero__scrim" />
         <span class="chip chip--warn">
-          <img src="/figma/icon-clock-event.svg" width="12" height="12" alt="" />
+          <img src="./figma/icon-clock-event.svg" width="12" height="12" alt="" />
           Starts in 3 hours
         </span>
         <span class="chip chip--hot">2 spots left!</span>
@@ -55,8 +55,8 @@
           <div class="hero__meta">
             <span class="chip chip--level">Level B2-C1</span>
             <span class="going">
-              <img src="/figma/tutor-mary.png" width="24" height="24" alt="" />
-              <img src="/figma/tutor-johny.png" width="24" height="24" alt="" />
+              <img src="./figma/tutor-mary.png" width="24" height="24" alt="" />
+              <img src="./figma/tutor-johny.png" width="24" height="24" alt="" />
               Gustavo and 3 more going
             </span>
           </div>
@@ -68,13 +68,13 @@
 
       <div class="toolbar">
         <button class="react" type="button">
-          <img src="/figma/event-react-heart.svg" width="16" height="16" alt="" />
-          <img src="/figma/event-react-fire.svg" width="16" height="16" alt="" />
-          <img src="/figma/event-react-clap.svg" width="16" height="16" alt="" />
+          <img src="./figma/event-react-heart.svg" width="16" height="16" alt="" />
+          <img src="./figma/event-react-fire.svg" width="16" height="16" alt="" />
+          <img src="./figma/event-react-clap.svg" width="16" height="16" alt="" />
           38
         </button>
         <button class="share" type="button">
-          <img src="/figma/icon-share-event.svg" width="20" height="20" alt="" />
+          <img src="./figma/icon-share-event.svg" width="20" height="20" alt="" />
           Share
         </button>
       </div>
@@ -95,7 +95,7 @@
 
       <article class="card">
         <div class="card__media">
-          <img src="/figma/event-interview.png" width="350" height="160" alt="" />
+          <img src="./figma/event-interview.png" width="350" height="160" alt="" />
           <span class="chip chip--level chip--on-photo">Level B2-C1</span>
           <span class="chip chip--hot chip--on-photo-end">Only 2 spots left!</span>
         </div>
@@ -106,16 +106,16 @@
               <h3>How to pass a job interview?</h3>
             </div>
             <button class="card__share" type="button" aria-label="Share">
-              <img src="/figma/icon-share-event.svg" width="16" height="16" alt="" />
+              <img src="./figma/icon-share-event.svg" width="16" height="16" alt="" />
             </button>
           </div>
           <p class="card__host">
             Conversation with <strong>Jonathan</strong>
-            <img src="/figma/flag-uk.png" width="12" height="12" alt="" />
+            <img src="./figma/flag-uk.png" width="12" height="12" alt="" />
           </p>
           <p class="going going--ink">
-            <img src="/figma/tutor-karina.png" width="24" height="24" alt="" />
-            <img src="/figma/tutor-geofrey.png" width="24" height="24" alt="" />
+            <img src="./figma/tutor-karina.png" width="24" height="24" alt="" />
+            <img src="./figma/tutor-geofrey.png" width="24" height="24" alt="" />
             Pedro and 31 more confirmed
           </p>
           <div class="card__actions">
@@ -123,8 +123,8 @@
               {{ interviewIn ? 'You’re going' : 'Confirm attendance' }}
             </button>
             <span class="react react--sm">
-              <img src="/figma/event-react-heart.svg" width="14" height="14" alt="" />
-              <img src="/figma/event-react-fire.svg" width="14" height="14" alt="" />
+              <img src="./figma/event-react-heart.svg" width="14" height="14" alt="" />
+              <img src="./figma/event-react-fire.svg" width="14" height="14" alt="" />
               36
             </span>
           </div>
