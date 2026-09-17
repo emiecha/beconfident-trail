@@ -1,0 +1,21 @@
+---
+description: Never use Feverup accounts or identity in this BeConfident prototype
+alwaysApply: true
+---
+
+# No Feverup in this workspace
+
+This repo is BeConfident-only. Never touch Feverup identity, accounts, or remotes.
+
+Do not:
+
+- Commit, push, or authenticate as GitHub `emilianoechevarriafever`
+- Use email `emiliano.echevarria@feverup.com` as author, committer, or git user
+- Push to Fever Labs / Feverup GitHub orgs or remotes
+- Change global git config (it may still be Feverup for other work)
+
+Do:
+
+- Git author for this repo: `Emiliano Echevarria <emiliano.echevarria@beconfident.app>` (local config only)
+- GitHub: `emiecha` only
+- Prefer a **private** repo + GitHub Pages; public repo is fallback if private Pages is unavailable
