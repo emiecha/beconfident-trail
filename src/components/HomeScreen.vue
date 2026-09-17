@@ -8,9 +8,15 @@
       @streak="openSheet('streak')"
     />
 
+    <PathScreen
+      v-else-if="tab === 'path'"
+      @start="openSheet('activity')"
+      @streak="openSheet('streak')"
+    />
+
     <PlaceholderScreen v-else :tab="tab" />
 
-    <TabBar :tab="tab" @update:tab="tab = $event" />
+    <TabBar :tab="tab" :variant="variant" @update:tab="tab = $event" />
 
     <div class="home-indicator" aria-hidden="true" />
 
@@ -38,12 +44,17 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import PathScreen from './PathScreen.vue';
 import PlaceholderScreen from './PlaceholderScreen.vue';
 import StatusBar from './StatusBar.vue';
 import TabBar from './TabBar.vue';
 import TrailScreen from './TrailScreen.vue';
 
-const tab = ref('trail');
+const props = defineProps({
+  variant: { type: String, default: 'trail' },
+});
+
+const tab = ref(props.variant === 'path' ? 'path' : 'trail');
 const sheet = ref(null);
 
 function openSheet(id) {
@@ -53,6 +64,13 @@ function openSheet(id) {
 function closeSheet() {
   sheet.value = null;
 }
+
+watch(
+  () => props.variant,
+  (next) => {
+    tab.value = next === 'path' ? 'path' : 'trail';
+  },
+);
 
 watch(tab, () => {
   sheet.value = null;

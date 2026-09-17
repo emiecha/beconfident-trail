@@ -81,6 +81,30 @@ img {
   color: rgba(255, 255, 255, 0.62);
 }
 
+.studio__switch {
+  display: inline-flex;
+  margin-top: 14px;
+  padding: 4px;
+  gap: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.studio__switch button {
+  min-width: 108px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.72);
+  font: 500 13px/1 var(--bc-font-sans);
+}
+
+.studio__switch button.is-on {
+  background: #fff;
+  color: #3e0798;
+}
+
 .phone {
   width: var(--phone-w);
   height: var(--phone-h);
@@ -99,10 +123,16 @@ img {
   .studio {
     padding: 0;
     background: #000;
+    gap: 0;
+  }
+
+  .studio__meta h1,
+  .studio__meta p {
+    display: none;
   }
 
   .studio__meta {
-    display: none;
+    padding: 10px 0 8px;
   }
 
   .phone {

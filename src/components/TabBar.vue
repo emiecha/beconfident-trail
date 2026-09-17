@@ -2,12 +2,12 @@
   <nav class="tabbar" aria-label="Navigation">
     <button
       class="tab"
-      :class="{ 'tab--active': tab === 'trail' }"
+      :class="{ 'tab--active': tab === primaryTab }"
       type="button"
-      @click="$emit('update:tab', 'trail')"
+      @click="$emit('update:tab', primaryTab)"
     >
-      <i :class="tab === 'trail' ? 'ri-route-fill' : 'ri-route-line'" />
-      <span>Trail</span>
+      <i :class="primaryIcon" />
+      <span>{{ primaryLabel }}</span>
     </button>
     <button
       class="tab"
@@ -45,11 +45,24 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
   tab: { type: String, required: true },
+  variant: { type: String, default: 'trail' },
 });
 
 defineEmits(['update:tab']);
+
+const primaryTab = computed(() => (props.variant === 'path' ? 'path' : 'trail'));
+const primaryLabel = computed(() => (props.variant === 'path' ? 'Path' : 'Trail'));
+const primaryIcon = computed(() => {
+  const active = props.tab === primaryTab.value;
+  if (props.variant === 'path') {
+    return active ? 'ri-stack-fill' : 'ri-stack-line';
+  }
+  return active ? 'ri-route-fill' : 'ri-route-line';
+});
 </script>
 
 <style scoped>
