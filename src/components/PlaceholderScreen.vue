@@ -33,19 +33,6 @@ const props = defineProps({
 defineEmits(['start']);
 
 const copy = computed(() => {
-  if (props.tab === 'social') {
-    return {
-      kicker: 'Page 3',
-      title: 'Social',
-      body: 'Ranking, community and invites live here — not on the nav bar.',
-      items: [
-        { icon: 'ri-trophy-line', title: 'Ranking', body: 'Your place in the club.' },
-        { icon: 'ri-id-card-line', title: 'Passport', body: 'Stamps from trails you finish.' },
-        { icon: 'ri-user-add-line', title: 'Invite friends', body: 'Bring someone into the loop.' },
-        { icon: 'ri-group-2-line', title: 'Community', body: 'Events, notices and the feed.' },
-      ],
-    };
-  }
   if (props.tab === 'profile') {
     return {
       kicker: 'Page 4',
@@ -60,12 +47,12 @@ const copy = computed(() => {
   }
   return {
     kicker: 'Page 2',
-    title: 'Other learning',
-    body: 'Be and the mentors moved off the bar. They support the loop; they don’t own a tab.',
+    title: 'Mentors',
+    body: 'Chat, twins and Be support the loop — they don’t own the first tab.',
     items: [
       { icon: 'ri-robot-2-line', title: 'AI mentor', body: 'Free chat, ideally on WhatsApp.' },
       { icon: 'ri-user-star-line', title: 'Digital twins', body: 'Practise with a specific tutor.' },
-      { icon: 'ri-bear-smile-line', title: 'Be', body: 'Realtime conversation, as a destination.' },
+      { icon: 'ri-bear-smile-line', title: 'Be', body: 'Solve doubts, as a destination.' },
       { icon: 'ri-error-warning-line', title: 'Review mistakes', body: 'What the last activity flagged.' },
     ],
   };

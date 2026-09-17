@@ -21,7 +21,7 @@ defineProps({
   position: absolute;
   top: 0;
   left: 50%;
-  z-index: 8;
+  z-index: 12;
   display: flex;
   align-items: flex-end;
   justify-content: center;

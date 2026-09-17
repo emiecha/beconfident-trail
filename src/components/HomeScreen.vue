@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <StatusBar :tone="tab === 'trail' ? 'dark' : 'light'" />
+    <StatusBar :tone="statusTone" />
 
     <TrailScreen
       v-if="tab === 'trail'"
@@ -14,27 +14,58 @@
       @streak="openSheet('streak')"
     />
 
+    <TutorsScreen
+      v-else-if="tab === 'tutors'"
+      @talk="openTalk"
+      @be="openSheet('be')"
+      @streak="openSheet('streak')"
+      @twins="openTwins"
+    />
+
+    <CommunityScreen
+      v-else-if="tab === 'community'"
+      @invite="openSheet('invite')"
+      @ranking="openSheet('ranking')"
+    />
+
+    <ProfileScreen v-else-if="tab === 'profile'" @invite="openSheet('invite')" />
+
     <PlaceholderScreen v-else :tab="tab" @start="openSheet('activity')" />
 
-    <TabBar :tab="tab" :variant="variant" @update:tab="tab = $event" />
+    <TabBar v-if="!fullSheet" :tab="tab" :variant="variant" @update:tab="tab = $event" />
 
-    <div class="home-indicator" aria-hidden="true" />
+    <div v-if="!fullSheet" class="home-indicator" aria-hidden="true" />
+
+    <ActivityPlayer v-if="sheet === 'activity'" @close="closeSheet" @done="openSheet('done')" />
+    <BeDoubts v-if="sheet === 'be'" @close="closeSheet" />
+    <DigitalTwins
+      v-if="sheet === 'twins'"
+      :initial-id="twinId"
+      @close="closeSheet"
+      @talk="openTalk"
+    />
+    <ActivityDone v-if="sheet === 'done'" @close="closeSheet" />
+    <RankingScreen v-if="sheet === 'ranking'" @close="closeSheet" />
+    <StreakScreen v-if="sheet === 'streak'" @close="closeSheet" />
 
     <Transition name="sheet">
-      <div v-if="sheet" class="overlay" @click.self="closeSheet">
+      <div v-if="sheet && !fullSheet" class="overlay" @click.self="closeSheet">
         <div class="sheet" role="dialog" aria-modal="true">
           <div class="sheet__handle" />
-          <template v-if="sheet === 'activity'">
-            <img class="sheet__hero" src="/figma/activity-tutor.png" width="88" height="132" alt="" />
-            <p class="sheet__kicker">Activity 3 of 6</p>
-            <h2>Let’s travel to New York</h2>
-            <p class="sheet__body">This would open the activity — the core loop starts here.</p>
+          <template v-if="sheet === 'talk'">
+            <h2>Start conversation</h2>
+            <p class="sheet__body">This would open a live conversation with {{ talkWith }}.</p>
+            <button class="sheet__cta" type="button" @click="closeSheet">Got it</button>
+          </template>
+          <template v-else-if="sheet === 'invite'">
+            <h2>Invite friends</h2>
+            <p class="sheet__body">This would share a link so a friend lands on the trail.</p>
             <button class="sheet__cta" type="button" @click="closeSheet">Got it</button>
           </template>
           <template v-else>
-            <h2>2-day streak</h2>
-            <p class="sheet__body">The streak is present, not the protagonist. Calendar and protections would live here.</p>
-            <button class="sheet__cta" type="button" @click="closeSheet">Keep practising</button>
+            <h2>Start conversation</h2>
+            <p class="sheet__body">This would open a live conversation with {{ talkWith }}.</p>
+            <button class="sheet__cta" type="button" @click="closeSheet">Got it</button>
           </template>
         </div>
       </div>
@@ -43,12 +74,21 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import ActivityDone from './ActivityDone.vue';
+import ActivityPlayer from './ActivityPlayer.vue';
+import BeDoubts from './BeDoubts.vue';
+import DigitalTwins from './DigitalTwins.vue';
 import PathScreen from './PathScreen.vue';
 import PlaceholderScreen from './PlaceholderScreen.vue';
+import ProfileScreen from './ProfileScreen.vue';
+import RankingScreen from './RankingScreen.vue';
 import StatusBar from './StatusBar.vue';
+import StreakScreen from './StreakScreen.vue';
 import TabBar from './TabBar.vue';
 import TrailScreen from './TrailScreen.vue';
+import TutorsScreen from './TutorsScreen.vue';
+import CommunityScreen from './CommunityScreen.vue';
 
 const props = defineProps({
   variant: { type: String, default: 'trail' },
@@ -56,9 +96,37 @@ const props = defineProps({
 
 const tab = ref(props.variant === 'path' ? 'path' : 'trail');
 const sheet = ref(null);
+const talkWith = ref('Karina');
+const twinId = ref('brian');
+const fullSheet = computed(
+  () =>
+    sheet.value === 'activity' ||
+    sheet.value === 'be' ||
+    sheet.value === 'twins' ||
+    sheet.value === 'done' ||
+    sheet.value === 'ranking' ||
+    sheet.value === 'streak',
+);
+const statusTone = computed(() => {
+  if (sheet.value === 'activity' || sheet.value === 'done') return 'light';
+  if (sheet.value === 'ranking' || sheet.value === 'streak' || sheet.value === 'twins' || sheet.value === 'be') {
+    return 'dark';
+  }
+  return tab.value === 'path' ? 'light' : 'dark';
+});
 
 function openSheet(id) {
   sheet.value = id;
+}
+
+function openTalk(name) {
+  talkWith.value = name;
+  sheet.value = 'talk';
+}
+
+function openTwins(id) {
+  twinId.value = id || 'brian';
+  sheet.value = 'twins';
 }
 
 function closeSheet() {

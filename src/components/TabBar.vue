@@ -11,21 +11,21 @@
     </button>
     <button
       class="tab"
-      :class="{ 'tab--active': tab === 'learn' }"
+      :class="{ 'tab--active': tab === 'tutors' }"
       type="button"
-      @click="$emit('update:tab', 'learn')"
+      @click="$emit('update:tab', 'tutors')"
     >
-      <i :class="tab === 'learn' ? 'ri-book-open-fill' : 'ri-book-open-line'" />
-      <span>Learn</span>
+      <i :class="tab === 'tutors' ? 'ri-user-voice-fill' : 'ri-user-voice-line'" />
+      <span>Tutors</span>
     </button>
     <button
       class="tab"
-      :class="{ 'tab--active': tab === 'social' }"
+      :class="{ 'tab--active': tab === 'community' }"
       type="button"
-      @click="$emit('update:tab', 'social')"
+      @click="$emit('update:tab', 'community')"
     >
-      <i :class="tab === 'social' ? 'ri-group-2-fill' : 'ri-group-2-line'" />
-      <span>Social</span>
+      <i :class="tab === 'community' ? 'ri-group-2-fill' : 'ri-group-2-line'" />
+      <span>Community</span>
     </button>
     <button
       class="tab"
