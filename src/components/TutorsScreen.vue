@@ -2,7 +2,7 @@
   <div class="tutors" :class="{ 'tutors--toast': toastOpen }">
     <button class="streak" type="button" @click="$emit('streak')">
       <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
-      <span>2 days</span>
+      <span>{{ streakDays }} days</span>
     </button>
 
     <div class="tutors__main">
@@ -117,6 +117,10 @@ import { figma } from '../figma.js';
 import { computed, ref } from 'vue';
 
 defineEmits(['talk', 'be', 'streak', 'twins']);
+
+defineProps({
+  streakDays: { type: Number, default: 2 },
+});
 
 const toastOpen = ref(true);
 

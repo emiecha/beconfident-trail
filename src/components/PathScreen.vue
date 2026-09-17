@@ -5,13 +5,13 @@
         <p class="path__crumb">B1 · Travel</p>
         <button class="streak" type="button" @click="$emit('streak')">
           <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
-          <span>2 days</span>
+          <span>{{ streakDays }} days</span>
         </button>
       </div>
       <h1>Your path</h1>
-      <p class="path__progress-label">9 of 24 activities · 180 XP</p>
+      <p class="path__progress-label">{{ stepped ? '10 of 24 activities · 200 XP' : '9 of 24 activities · 180 XP' }}</p>
       <div class="path__bar" aria-hidden="true">
-        <span style="width: 38%" />
+        <span :style="{ width: stepped ? '42%' : '38%' }" />
       </div>
     </header>
 
@@ -61,7 +61,13 @@
               v-for="lesson in mod.lessons"
               :key="lesson.id"
               class="lesson"
-              :class="[`lesson--${lesson.state}`]"
+              :class="[
+                `lesson--${lesson.state}`,
+                {
+                  'lesson--pop': stepped && lesson.id === 'l4',
+                  'lesson--arrive': stepped && lesson.id === 'l5',
+                },
+              ]"
             >
               <i
                 v-if="lesson.state === 'done'"
@@ -92,11 +98,37 @@
 
 <script setup>
 import { figma } from '../figma.js';
-import { ref } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 defineEmits(['start', 'streak']);
 
-const modules = [
+const props = defineProps({
+  advanced: { type: Boolean, default: false },
+  streakDays: { type: Number, default: 2 },
+});
+
+const stepped = ref(false);
+let stepTimer;
+
+watch(
+  () => props.advanced,
+  (next) => {
+    clearTimeout(stepTimer);
+    if (!next) {
+      stepped.value = false;
+      return;
+    }
+    stepped.value = false;
+    stepTimer = setTimeout(() => {
+      stepped.value = true;
+    }, 480);
+  },
+  { immediate: true },
+);
+
+onBeforeUnmount(() => clearTimeout(stepTimer));
+
+const modules = computed(() => [
   {
     id: 'airport',
     state: 'done',
@@ -121,17 +153,17 @@ const modules = [
     state: 'current',
     title: 'New York',
     kicker: 'Module 2',
-    meta: '3 of 6 · 60 XP',
-    progress: '50%',
-    currentIndex: 3,
+    meta: stepped.value ? '4 of 6 · 80 XP' : '3 of 6 · 60 XP',
+    progress: stepped.value ? '67%' : '50%',
+    currentIndex: stepped.value ? 4 : 3,
     icon: 'ri-building-4-line',
     tint: 'linear-gradient(135deg, #20044e, #8134fe)',
     lessons: [
       { id: 'l1', state: 'done', title: 'Book the flight', xp: 20 },
       { id: 'l2', state: 'done', title: 'At the gate', xp: 20 },
       { id: 'l3', state: 'done', title: 'Meet your host', xp: 20 },
-      { id: 'l4', state: 'current', title: 'Let’s travel to New York', xp: 20 },
-      { id: 'l5', state: 'locked', title: 'Order coffee', xp: 20 },
+      { id: 'l4', state: stepped.value ? 'done' : 'current', title: 'Let’s travel to New York', xp: 20 },
+      { id: 'l5', state: stepped.value ? 'current' : 'locked', title: 'Order coffee', xp: 20 },
       { id: 'l6', state: 'locked', title: 'Ask for directions', xp: 20 },
     ],
   },
@@ -173,7 +205,7 @@ const modules = [
       { id: 'c6', state: 'locked', title: 'Read a map' },
     ],
   },
-];
+]);
 
 const openId = ref('nyc');
 
@@ -265,6 +297,7 @@ function toggle(mod) {
   height: 100%;
   border-radius: 999px;
   background: #82e39c;
+  transition: width 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .path__scroll {
@@ -452,6 +485,7 @@ function toggle(mod) {
   height: 100%;
   border-radius: 999px;
   background: #8134fe;
+  transition: width 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .mod--locked .card__track span {
@@ -477,6 +511,10 @@ function toggle(mod) {
   border-radius: 12px;
   font: 500 14px/1.2 var(--bc-font-sans);
   color: #27202c;
+  transition:
+    background 400ms ease,
+    color 400ms ease,
+    transform 400ms ease;
 }
 
 .lesson i {
@@ -520,5 +558,56 @@ function toggle(mod) {
   color: #fff;
   font: 500 13px/1 var(--bc-font-sans);
   box-shadow: 0 8px 18px rgba(129, 52, 254, 0.28);
+}
+
+.lesson--pop i {
+  animation: check-pop 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.lesson--arrive {
+  animation: lesson-arrive 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lesson--arrive .lesson__cta {
+  animation: cta-in 420ms 180ms both cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes check-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.2;
+  }
+  70% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes lesson-arrive {
+  from {
+    transform: translateY(6px);
+    box-shadow: 0 0 0 0 rgba(129, 52, 254, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(129, 52, 254, 0.16);
+  }
+  to {
+    transform: none;
+    box-shadow: 0 0 0 0 rgba(129, 52, 254, 0);
+  }
+}
+
+@keyframes cta-in {
+  from {
+    transform: scale(0.86);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
 }
 </style>

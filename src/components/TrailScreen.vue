@@ -1,10 +1,10 @@
 <template>
   <div class="trail">
     <div class="trail__chrome">
-      <p class="trail__crumb">B1 · Travel · New York · 3 of 6</p>
+      <p class="trail__crumb">B1 · Travel · New York · {{ currentIndex }} of 6</p>
       <button class="streak" type="button" @click="$emit('streak')">
         <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
-        <span>2 days</span>
+        <span>{{ streakDays }} days</span>
       </button>
     </div>
 
@@ -15,7 +15,7 @@
         v-for="node in nodes"
         :key="node.id"
         class="row"
-        :class="[`row--${node.align}`, `row--${node.state}`]"
+        :class="[`row--${node.align}`, `row--${node.state}`, { 'row--fresh': stepped && (node.id === 'n4' || node.id === 'n5') }]"
         :ref="(el) => { if (node.state === 'current') setCurrent(el) }"
       >
         <button
@@ -40,8 +40,8 @@
               alt=""
             />
             <div class="current__copy">
-              <p class="current__eyebrow">Activity 3 of 6</p>
-              <h2>Let’s travel to New York</h2>
+              <p class="current__eyebrow">Activity {{ currentIndex }} of 6</p>
+              <h2>{{ node.title }}</h2>
               <button class="current__cta" type="button" @click="$emit('start')">
                 <span>Start</span>
                 <img :src="figma('icon-play.svg')" width="20" height="20" alt="" />
@@ -74,19 +74,47 @@
 
 <script setup>
 import { figma } from '../figma.js';
-import { nextTick, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 defineEmits(['start', 'streak']);
 
-const nodes = [
+const props = defineProps({
+  advanced: { type: Boolean, default: false },
+  streakDays: { type: Number, default: 2 },
+});
+
+const stepped = ref(false);
+let stepTimer;
+
+watch(
+  () => props.advanced,
+  (next) => {
+    clearTimeout(stepTimer);
+    if (!next) {
+      stepped.value = false;
+      return;
+    }
+    stepped.value = false;
+    stepTimer = setTimeout(() => {
+      stepped.value = true;
+    }, 480);
+  },
+  { immediate: true },
+);
+
+onBeforeUnmount(() => clearTimeout(stepTimer));
+
+const currentIndex = computed(() => (stepped.value ? 4 : 3));
+
+const nodes = computed(() => [
   { id: 'n1', state: 'done', title: 'Book the flight', align: 'left' },
   { id: 'n2', state: 'done', title: 'At the gate', align: 'center' },
   { id: 'n3', state: 'done', title: 'Meet your host', align: 'right' },
-  { id: 'n4', state: 'current', title: "Let's travel to New York", align: 'center' },
-  { id: 'n5', state: 'locked', title: 'Order coffee', align: 'left' },
+  { id: 'n4', state: stepped.value ? 'done' : 'current', title: 'Let’s travel to New York', align: 'center' },
+  { id: 'n5', state: stepped.value ? 'current' : 'locked', title: 'Order coffee', align: 'left' },
   { id: 'n6', state: 'locked', title: 'Ask for directions', align: 'center' },
   { id: 'n7', state: 'checkpoint', title: 'Module complete', align: 'center' },
-];
+]);
 
 const scroller = ref(null);
 const currentEl = ref(null);
@@ -97,12 +125,27 @@ function setCurrent(el) {
 
 onMounted(async () => {
   await nextTick();
+  scrollToCurrent(false);
+});
+
+watch(stepped, async (next) => {
+  if (!next) return;
+  await nextTick();
+  scrollToCurrent(true);
+});
+
+function scrollToCurrent(smooth) {
   const track = scroller.value;
   const current = currentEl.value;
   if (!track || !current) return;
   const top = current.offsetTop - track.clientHeight / 2 + current.clientHeight / 2;
-  track.scrollTop = Math.max(0, top);
-});
+  const y = Math.max(0, top);
+  if (smooth && typeof track.scrollTo === 'function') {
+    track.scrollTo({ top: y, behavior: 'smooth' });
+    return;
+  }
+  track.scrollTop = y;
+}
 </script>
 
 <style scoped>
@@ -269,6 +312,39 @@ onMounted(async () => {
   overflow: hidden;
   background: #20044e;
   box-shadow: 0 10px 30px rgba(129, 52, 254, 0.28);
+}
+
+.row--fresh.row--done .dot--done i {
+  animation: check-pop 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.row--fresh.row--current .current {
+  animation: card-arrive 620ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes check-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.2;
+  }
+  70% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes card-arrive {
+  from {
+    transform: translateY(18px) scale(0.96);
+    opacity: 0.35;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
 }
 
 .current__bg {

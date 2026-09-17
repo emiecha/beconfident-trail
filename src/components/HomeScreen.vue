@@ -4,18 +4,23 @@
 
     <TrailScreen
       v-if="tab === 'trail'"
+      :advanced="pathAdvanced"
+      :streak-days="streakDays"
       @start="openSheet('activity')"
       @streak="openSheet('streak')"
     />
 
     <PathScreen
       v-else-if="tab === 'path'"
+      :advanced="pathAdvanced"
+      :streak-days="streakDays"
       @start="openSheet('activity')"
       @streak="openSheet('streak')"
     />
 
     <TutorsScreen
       v-else-if="tab === 'tutors'"
+      :streak-days="streakDays"
       @talk="openTalk"
       @be="openSheet('be')"
       @streak="openSheet('streak')"
@@ -44,7 +49,8 @@
       @close="closeSheet"
       @talk="openTalk"
     />
-    <ActivityDone v-if="sheet === 'done'" @close="closeSheet" />
+    <ActivityDone v-if="sheet === 'done'" @close="closeSheet" @continue="openSheet('streak-win')" />
+    <StreakWin v-if="sheet === 'streak-win'" @close="finishStreak" @continue="finishStreak" />
     <RankingScreen v-if="sheet === 'ranking'" @close="closeSheet" />
     <StreakScreen v-if="sheet === 'streak'" @close="closeSheet" />
 
@@ -85,6 +91,7 @@ import ProfileScreen from './ProfileScreen.vue';
 import RankingScreen from './RankingScreen.vue';
 import StatusBar from './StatusBar.vue';
 import StreakScreen from './StreakScreen.vue';
+import StreakWin from './StreakWin.vue';
 import TabBar from './TabBar.vue';
 import TrailScreen from './TrailScreen.vue';
 import TutorsScreen from './TutorsScreen.vue';
@@ -98,18 +105,27 @@ const tab = ref(props.variant === 'path' ? 'path' : 'trail');
 const sheet = ref(null);
 const talkWith = ref('Karina');
 const twinId = ref('brian');
+const pathAdvanced = ref(false);
+const streakDays = ref(2);
 const fullSheet = computed(
   () =>
     sheet.value === 'activity' ||
     sheet.value === 'be' ||
     sheet.value === 'twins' ||
     sheet.value === 'done' ||
+    sheet.value === 'streak-win' ||
     sheet.value === 'ranking' ||
     sheet.value === 'streak',
 );
 const statusTone = computed(() => {
   if (sheet.value === 'activity' || sheet.value === 'done') return 'light';
-  if (sheet.value === 'ranking' || sheet.value === 'streak' || sheet.value === 'twins' || sheet.value === 'be') {
+  if (
+    sheet.value === 'ranking' ||
+    sheet.value === 'streak' ||
+    sheet.value === 'streak-win' ||
+    sheet.value === 'twins' ||
+    sheet.value === 'be'
+  ) {
     return 'dark';
   }
   return tab.value === 'path' ? 'light' : 'dark';
@@ -130,6 +146,12 @@ function openTwins(id) {
 }
 
 function closeSheet() {
+  sheet.value = null;
+}
+
+function finishStreak() {
+  pathAdvanced.value = true;
+  streakDays.value = 10;
   sheet.value = null;
 }
 

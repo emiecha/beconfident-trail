@@ -77,7 +77,7 @@
           Review 10 mistakes
           <i class="ri-pencil-line" />
         </button>
-        <button class="btn btn--text" type="button" @click="$emit('close')">Continue</button>
+        <button class="btn btn--text" type="button" @click="$emit('continue')">Continue</button>
       </div>
     </template>
   </div>
@@ -87,7 +87,7 @@
 import { figma } from '../figma.js';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-defineEmits(['close']);
+defineEmits(['close', 'continue']);
 
 const step = ref(0);
 let t1;
