@@ -5,12 +5,13 @@
     </div>
     <div class="status__island" />
     <div class="status__side status__side--right">
-      <img class="status__icons" src="./figma/status-icons.svg" width="78" height="13" alt="" />
+      <img class="status__icons" :src="figma('status-icons.svg')" width="78" height="13" alt="" />
     </div>
   </header>
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 defineProps({
   tone: { type: String, default: 'light' },
 });

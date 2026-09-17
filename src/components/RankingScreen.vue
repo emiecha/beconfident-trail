@@ -53,7 +53,7 @@
 
     <aside class="you">
       <span class="list__n">40</span>
-      <img src="./figma/rank-you.png" width="48" height="48" alt="" />
+      <img :src="figma('rank-you.png')" width="48" height="48" alt="" />
       <span>
         <strong>You <small>(1020)</small></strong>
         398 points
@@ -64,6 +64,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 import { ref } from 'vue';
 
 defineEmits(['close']);
@@ -72,15 +73,15 @@ const filter = ref('level');
 const labels = { all: 'All', level: 'My level', friends: 'Friends' };
 
 const podium = [
-  { place: 2, name: 'Lucas', code: '0245', pts: '15,000', photo: './figma/rank-2.png' },
-  { place: 1, name: 'Sofia', code: '1010', pts: '15,000', photo: './figma/rank-1.png' },
+  { place: 2, name: 'Lucas', code: '0245', pts: '15,000', photo: figma('rank-2.png') },
+  { place: 1, name: 'Sofia', code: '1010', pts: '15,000', photo: figma('rank-1.png') },
   { place: 3, name: 'Bruno', code: '8291', pts: '15,000', letter: 'B' },
 ];
 
 const rest = [
-  { place: 4, name: 'Amina', code: '1010', pts: '12,000', photo: './figma/rank-3.png' },
-  { place: 5, name: 'Jia', code: '1010', pts: '11,000', photo: './figma/rank-4.png' },
-  { place: 6, name: 'Noah', code: '1010', pts: '10,000', photo: './figma/tutor-johny.png' },
+  { place: 4, name: 'Amina', code: '1010', pts: '12,000', photo: figma('rank-3.png') },
+  { place: 5, name: 'Jia', code: '1010', pts: '11,000', photo: figma('rank-4.png') },
+  { place: 6, name: 'Noah', code: '1010', pts: '10,000', photo: figma('tutor-johny.png') },
 ];
 </script>
 

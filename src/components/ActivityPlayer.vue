@@ -2,7 +2,7 @@
   <div class="player" role="dialog" aria-modal="true" aria-label="Activity" @click="$emit('done')">
     <img
       class="player__bg"
-      src="./figma/activity-player-bg.png"
+      :src="figma('activity-player-bg.png')"
       width="390"
       height="844"
       alt=""
@@ -11,7 +11,7 @@
 
     <header class="player__top">
       <button class="player__icon" type="button" aria-label="Close" @click.stop="$emit('close')">
-        <img src="./figma/icon-logout.svg" width="24" height="24" alt="" />
+        <img :src="figma('icon-logout.svg')" width="24" height="24" alt="" />
       </button>
       <div class="player__title">
         <p>Let’s go to New York</p>
@@ -20,7 +20,7 @@
         </div>
       </div>
       <button class="player__icon" type="button" aria-label="More">
-        <img src="./figma/icon-dots.svg" width="24" height="24" alt="" />
+        <img :src="figma('icon-dots.svg')" width="24" height="24" alt="" />
       </button>
     </header>
 
@@ -30,11 +30,11 @@
 
     <div class="player__chips">
       <button class="chip" type="button">
-        <img src="./figma/icon-translate.svg" width="16" height="16" alt="" />
+        <img :src="figma('icon-translate.svg')" width="16" height="16" alt="" />
         Translate
       </button>
       <button class="chip" type="button">
-        <img src="./figma/icon-help.svg" width="12" height="12" alt="" />
+        <img :src="figma('icon-help.svg')" width="12" height="12" alt="" />
         Help me?
       </button>
     </div>
@@ -47,10 +47,10 @@
     <div class="player__controls">
       <button class="ctrl ctrl--ghost" type="button">1x</button>
       <button class="ctrl ctrl--ghost ctrl--icon" type="button" aria-label="Replay">
-        <img src="./figma/icon-replay.svg" width="16" height="16" alt="" />
+        <img :src="figma('icon-replay.svg')" width="16" height="16" alt="" />
       </button>
       <button class="ctrl ctrl--pause" type="button">
-        <img src="./figma/icon-pause.svg" width="16" height="16" alt="" />
+        <img :src="figma('icon-pause.svg')" width="16" height="16" alt="" />
         Pause
       </button>
     </div>
@@ -58,6 +58,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 defineEmits(['close', 'done']);
 </script>
 

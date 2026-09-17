@@ -34,7 +34,7 @@
       @click="$emit('update:tab', 'profile')"
     >
       <span class="tab__avatar" :class="{ 'tab__avatar--on': tab === 'profile' }">
-        <img src="./figma/avatar-sm.png" width="24" height="24" alt="" />
+        <img :src="figma('avatar-sm.png')" width="24" height="24" alt="" />
       </span>
       <span>Profile</span>
     </button>
@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 import { computed } from 'vue';
 
 const props = defineProps({

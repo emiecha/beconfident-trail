@@ -1,7 +1,7 @@
 <template>
   <div class="tutors" :class="{ 'tutors--toast': toastOpen }">
     <button class="streak" type="button" @click="$emit('streak')">
-      <img class="streak__icon" src="./figma/icon-flame.svg" width="16" height="16" alt="" />
+      <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
       <span>2 days</span>
     </button>
 
@@ -80,7 +80,7 @@
       </section>
 
       <button class="be" type="button" @click="$emit('be')">
-        <img src="./figma/be-face.svg" width="56" height="56" alt="" />
+        <img :src="figma('be-face.svg')" width="56" height="56" alt="" />
         <span>
           <strong>Anything you’re unsure about in English?</strong>
           Let’s clear it up.
@@ -91,7 +91,7 @@
 
     <aside v-if="toastOpen" class="toast" role="status">
       <div class="toast__copy">
-        <img src="./figma/icon-whatsapp.svg" width="20" height="20" alt="" />
+        <img :src="figma('icon-whatsapp.svg')" width="20" height="20" alt="" />
         <div class="toast__text">
           <p class="toast__kicker">Did you know?</p>
           <p class="toast__line">You can talk to your tutor on WhatsApp too.</p>
@@ -113,6 +113,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 import { computed, ref } from 'vue';
 
 defineEmits(['talk', 'be', 'streak', 'twins']);
@@ -120,11 +121,11 @@ defineEmits(['talk', 'be', 'streak', 'twins']);
 const toastOpen = ref(true);
 
 const tutors = [
-  { id: 'karina', name: 'Karina', photo: './figma/tutor-karina.png', hero: './figma/activity-tutor.png', flag: './figma/flag-us.png' },
-  { id: 'mary', name: 'Mary', photo: './figma/tutor-mary.png', hero: './figma/tutor-mary.png', flag: './figma/flag-in.png' },
-  { id: 'johny', name: 'Johny', photo: './figma/tutor-johny.png', hero: './figma/tutor-johny.png', flag: './figma/flag-uk.png' },
-  { id: 'geofrey', name: 'Geofrey', photo: './figma/tutor-geofrey.png', hero: './figma/tutor-geofrey.png', flag: './figma/flag-au.png' },
-  { id: 'laura', name: 'Laura', photo: './figma/tutor-laura.png', hero: './figma/tutor-laura.png', flag: './figma/flag-us.png' },
+  { id: 'karina', name: 'Karina', photo: figma('tutor-karina.png'), hero: figma('activity-tutor.png'), flag: figma('flag-us.png') },
+  { id: 'mary', name: 'Mary', photo: figma('tutor-mary.png'), hero: figma('tutor-mary.png'), flag: figma('flag-in.png') },
+  { id: 'johny', name: 'Johny', photo: figma('tutor-johny.png'), hero: figma('tutor-johny.png'), flag: figma('flag-uk.png') },
+  { id: 'geofrey', name: 'Geofrey', photo: figma('tutor-geofrey.png'), hero: figma('tutor-geofrey.png'), flag: figma('flag-au.png') },
+  { id: 'laura', name: 'Laura', photo: figma('tutor-laura.png'), hero: figma('tutor-laura.png'), flag: figma('flag-us.png') },
 ];
 
 const masters = [
@@ -132,22 +133,22 @@ const masters = [
     id: 'brian',
     name: 'Brian\nRequarth',
     role: 'Entrepreneur',
-    photo: './figma/master-brian.png',
-    flag: './figma/flag-us.png',
+    photo: figma('master-brian.png'),
+    flag: figma('flag-us.png'),
   },
   {
     id: 'daiane',
     name: 'Daiane dos\nSantos',
     role: 'Olympic athlete',
-    photo: './figma/master-daiane.png',
-    flag: './figma/flag-br.png',
+    photo: figma('master-daiane.png'),
+    flag: figma('flag-br.png'),
   },
   {
     id: 'doug',
     name: 'Doug\nScherrer',
     role: 'Investor',
-    photo: './figma/master-doug.png',
-    flag: './figma/flag-us.png',
+    photo: figma('master-doug.png'),
+    flag: figma('flag-us.png'),
   },
 ];
 

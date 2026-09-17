@@ -22,24 +22,24 @@
         <i class="ri-question-line" />
       </button>
       <div class="thumb">
-        <img src="./figma/done-nyc.png" width="120" height="160" alt="" />
+        <img :src="figma('done-nyc.png')" width="120" height="160" alt="" />
         <span class="thumb__check">
-          <img src="./figma/icon-check-green.svg" width="20" height="20" alt="" />
+          <img :src="figma('icon-check-green.svg')" width="20" height="20" alt="" />
         </span>
       </div>
       <h1>Activity completed</h1>
       <p class="done__sub">How to go to New York</p>
       <ul class="checks">
         <li>
-          <img src="./figma/icon-check-green.svg" width="20" height="20" alt="" />
+          <img :src="figma('icon-check-green.svg')" width="20" height="20" alt="" />
           Calculating overall score
         </li>
         <li>
-          <img src="./figma/icon-check-green.svg" width="20" height="20" alt="" />
+          <img :src="figma('icon-check-green.svg')" width="20" height="20" alt="" />
           Finding points to improve
         </li>
         <li>
-          <img src="./figma/icon-spin-done.svg" width="20" height="20" alt="" />
+          <img :src="figma('icon-spin-done.svg')" width="20" height="20" alt="" />
           Preparing your feedback
         </li>
       </ul>
@@ -84,6 +84,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 defineEmits(['close']);

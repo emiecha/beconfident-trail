@@ -1,29 +1,29 @@
 <template>
   <div class="be" role="dialog" aria-modal="true" aria-label="Be">
-    <img class="be__city" src="./figma/be-doubts-bg.png" width="390" height="844" alt="" />
+    <img class="be__city" :src="figma('be-doubts-bg.png')" width="390" height="844" alt="" />
     <div class="be__scrim" />
 
     <div class="card">
       <header class="card__head">
         <button class="history" type="button">
-          <img src="./figma/icon-history.svg" width="20" height="20" alt="" />
+          <img :src="figma('icon-history.svg')" width="20" height="20" alt="" />
           History
         </button>
         <button class="close" type="button" aria-label="Close" @click="$emit('close')">
-          <img src="./figma/icon-close-x.svg" width="24" height="24" alt="" />
+          <img :src="figma('icon-close-x.svg')" width="24" height="24" alt="" />
         </button>
       </header>
 
       <div class="hero">
-        <img class="hero__face" src="./figma/be-doubts-face.png" width="64" height="64" alt="Be" />
+        <img class="hero__face" :src="figma('be-doubts-face.png')" width="64" height="64" alt="Be" />
         <h1>Hey Mel, how can I help you?</h1>
         <div class="chips">
           <button class="chip" type="button">
-            <img src="./figma/icon-help-chip.svg" width="16" height="16" alt="" />
+            <img :src="figma('icon-help-chip.svg')" width="16" height="16" alt="" />
             Solve a doubt
           </button>
           <button class="chip" type="button">
-            <img src="./figma/icon-stars.svg" width="16" height="16" alt="" />
+            <img :src="figma('icon-stars.svg')" width="16" height="16" alt="" />
             Tell me something new
           </button>
         </div>
@@ -31,14 +31,14 @@
 
       <div class="panel">
         <button v-for="q in questions" :key="q" class="q" type="button">
-          <img src="./figma/icon-help-list.svg" width="20" height="20" alt="" />
+          <img :src="figma('icon-help-list.svg')" width="20" height="20" alt="" />
           <span>{{ q }}</span>
-          <img class="q__chevron" src="./figma/icon-chevron-list.svg" width="20" height="20" alt="" />
+          <img class="q__chevron" :src="figma('icon-chevron-list.svg')" width="20" height="20" alt="" />
         </button>
         <div class="composer">
           <input class="composer__input" type="text" placeholder="Your message..." />
           <button class="composer__mic" type="button" aria-label="Record">
-            <img src="./figma/icon-mic-fill.svg" width="21" height="21" alt="" />
+            <img :src="figma('icon-mic-fill.svg')" width="21" height="21" alt="" />
           </button>
         </div>
       </div>
@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 defineEmits(['close']);
 
 const questions = [

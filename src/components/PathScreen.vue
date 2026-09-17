@@ -4,7 +4,7 @@
       <div class="path__chrome">
         <p class="path__crumb">B1 · Travel</p>
         <button class="streak" type="button" @click="$emit('streak')">
-          <img class="streak__icon" src="./figma/icon-flame.svg" width="16" height="16" alt="" />
+          <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
           <span>2 days</span>
         </button>
       </div>
@@ -91,6 +91,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 import { ref } from 'vue';
 
 defineEmits(['start', 'streak']);

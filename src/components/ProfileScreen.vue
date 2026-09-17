@@ -12,8 +12,8 @@
 
     <section class="identity">
       <div class="identity__photo">
-        <img class="identity__avatar" src="./figma/profile-melanie.png" width="100" height="100" alt="Melanie Sol" />
-        <img class="identity__be" src="./figma/profile-be.svg" width="48" height="48" alt="" />
+        <img class="identity__avatar" :src="figma('profile-melanie.png')" width="100" height="100" alt="Melanie Sol" />
+        <img class="identity__be" :src="figma('profile-be.svg')" width="48" height="48" alt="" />
       </div>
       <div class="stats">
         <div class="stat">
@@ -34,40 +34,40 @@
         <p>Since 2024</p>
       </div>
       <button class="share" type="button">
-        <img src="./figma/icon-share-profile.svg" width="20" height="20" alt="" />
+        <img :src="figma('icon-share-profile.svg')" width="20" height="20" alt="" />
         Share
       </button>
     </section>
 
     <button class="add" type="button" @click="$emit('invite')">
-      <img src="./figma/icon-user-add.svg" width="20" height="20" alt="" />
+      <img :src="figma('icon-user-add.svg')" width="20" height="20" alt="" />
       Add friends
     </button>
 
     <section class="streak">
       <div class="streak__flame">
-        <img src="./figma/icon-flame-lg.svg" width="28" height="28" alt="" />
+        <img :src="figma('icon-flame-lg.svg')" width="28" height="28" alt="" />
       </div>
       <button class="streak__record" type="button">
         Streak record: 230 days
-        <img src="./figma/icon-streak-chevron.svg" width="16" height="16" alt="" />
+        <img :src="figma('icon-streak-chevron.svg')" width="16" height="16" alt="" />
       </button>
       <p class="streak__title">20-day streak</p>
       <p class="streak__sub">currently</p>
       <div class="streak__tiles">
         <button class="tile" type="button">
           <span class="tile__icon">
-            <img src="./figma/icon-cefr.svg" width="16" height="16" alt="" />
+            <img :src="figma('icon-cefr.svg')" width="16" height="16" alt="" />
           </span>
-          <img class="tile__chevron" src="./figma/icon-chevron-white.svg" width="20" height="20" alt="" />
+          <img class="tile__chevron" :src="figma('icon-chevron-white.svg')" width="20" height="20" alt="" />
           <strong>B1</strong>
           <span>CEFR level</span>
         </button>
         <button class="tile" type="button">
           <span class="tile__icon">
-            <img src="./figma/icon-cert.svg" width="16" height="16" alt="" />
+            <img :src="figma('icon-cert.svg')" width="16" height="16" alt="" />
           </span>
-          <img class="tile__chevron" src="./figma/icon-chevron-white.svg" width="20" height="20" alt="" />
+          <img class="tile__chevron" :src="figma('icon-chevron-white.svg')" width="20" height="20" alt="" />
           <strong>2</strong>
           <span>Certificates</span>
         </button>
@@ -82,7 +82,7 @@
       <div class="friends">
         <article v-for="friend in friends" :key="friend.initial" class="friend">
           <button class="friend__x" type="button" aria-label="Dismiss">
-            <img src="./figma/icon-dismiss.svg" width="20" height="20" alt="" />
+            <img :src="figma('icon-dismiss.svg')" width="20" height="20" alt="" />
           </button>
           <span class="friend__avatar" :style="{ background: friend.color }">{{ friend.initial }}</span>
           <p class="friend__name">{{ friend.name }}</p>
@@ -99,24 +99,24 @@
       </header>
       <div class="stamps">
         <article class="stamp stamp--blue">
-          <img class="stamp__star" src="./figma/stamp-star.svg" width="130" height="130" alt="" />
-          <img class="stamp__icon" src="./figma/stamp-backpacker.svg" width="24" height="24" alt="" />
+          <img class="stamp__star" :src="figma('stamp-star.svg')" width="130" height="130" alt="" />
+          <img class="stamp__icon" :src="figma('stamp-backpacker.svg')" width="24" height="24" alt="" />
           <p>Backpacker</p>
           <span>18 JUN 2025</span>
-          <img class="stamp__mark" src="./figma/stamp-symbol.svg" width="18" height="16" alt="" />
+          <img class="stamp__mark" :src="figma('stamp-symbol.svg')" width="18" height="16" alt="" />
         </article>
         <article class="stamp stamp--skill">
-          <img class="stamp__mark stamp__mark--tr" src="./figma/stamp-symbol-purple.svg" width="18" height="16" alt="" />
-          <img class="stamp__icon stamp__icon--left" src="./figma/stamp-grammar.svg" width="24" height="24" alt="" />
+          <img class="stamp__mark stamp__mark--tr" :src="figma('stamp-symbol-purple.svg')" width="18" height="16" alt="" />
+          <img class="stamp__icon stamp__icon--left" :src="figma('stamp-grammar.svg')" width="24" height="24" alt="" />
           <p>Level 1<br />Grammar</p>
           <span>18 JUN 2025</span>
         </article>
         <article class="stamp stamp--muted">
-          <img class="stamp__star" src="./figma/stamp-star-muted.svg" width="130" height="130" alt="" />
-          <img class="stamp__icon" src="./figma/stamp-tourist.svg" width="24" height="24" alt="" />
+          <img class="stamp__star" :src="figma('stamp-star-muted.svg')" width="130" height="130" alt="" />
+          <img class="stamp__icon" :src="figma('stamp-tourist.svg')" width="24" height="24" alt="" />
           <p>Tourist</p>
           <span>18 JUN 2025</span>
-          <img class="stamp__mark" src="./figma/stamp-symbol-muted.svg" width="18" height="16" alt="" />
+          <img class="stamp__mark" :src="figma('stamp-symbol-muted.svg')" width="18" height="16" alt="" />
         </article>
       </div>
     </section>
@@ -129,7 +129,7 @@
         </div>
         <button class="period" type="button">
           Last month
-          <img src="./figma/icon-dropdown.svg" width="20" height="20" alt="" />
+          <img :src="figma('icon-dropdown.svg')" width="20" height="20" alt="" />
         </button>
       </header>
       <p class="practice__hours">10h</p>
@@ -158,7 +158,7 @@
         </div>
       </div>
       <p class="practice__note">
-        <img src="./figma/icon-check-green.svg" width="16" height="16" alt="" />
+        <img :src="figma('icon-check-green.svg')" width="16" height="16" alt="" />
         35 days of practice this month
       </p>
     </section>
@@ -167,9 +167,9 @@
       <article class="mini">
         <div class="mini__faces">
           <span class="mini__chip">
-            <img src="./figma/icon-chat-sm.svg" width="16" height="16" alt="" />
+            <img :src="figma('icon-chat-sm.svg')" width="16" height="16" alt="" />
           </span>
-          <img src="./figma/tutor-karina.png" width="32" height="32" alt="Karina" />
+          <img :src="figma('tutor-karina.png')" width="32" height="32" alt="Karina" />
         </div>
         <p class="mini__copy">Your favorite tutor is Karina</p>
         <div class="mini__nums">
@@ -184,10 +184,10 @@
         </div>
       </article>
       <article class="mini mini--wa">
-        <img class="mini__bg" src="./figma/profile-whatsapp-bg.png" alt="" />
+        <img class="mini__bg" :src="figma('profile-whatsapp-bg.png')" alt="" />
         <div class="mini__faces">
           <span class="mini__chip">
-            <img src="./figma/icon-whatsapp.svg" width="16" height="16" alt="" />
+            <img :src="figma('icon-whatsapp.svg')" width="16" height="16" alt="" />
           </span>
         </div>
         <div>
@@ -205,12 +205,12 @@
         </div>
         <button class="period" type="button">
           Month
-          <img src="./figma/icon-dropdown.svg" width="20" height="20" alt="" />
+          <img :src="figma('icon-dropdown.svg')" width="20" height="20" alt="" />
         </button>
       </header>
       <ul>
         <li v-for="word in words" :key="word.term">
-          <img src="./figma/icon-info.svg" width="14" height="14" alt="" />
+          <img :src="figma('icon-info.svg')" width="14" height="14" alt="" />
           <strong>{{ word.term }}</strong>
           <span>{{ word.kind }}</span>
         </li>
@@ -220,6 +220,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 defineEmits(['invite']);
 
 const friends = [

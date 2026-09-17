@@ -3,7 +3,7 @@
     <div class="trail__chrome">
       <p class="trail__crumb">B1 · Travel · New York · 3 of 6</p>
       <button class="streak" type="button" @click="$emit('streak')">
-        <img class="streak__icon" src="./figma/icon-flame.svg" width="16" height="16" alt="" />
+        <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
         <span>2 days</span>
       </button>
     </div>
@@ -29,12 +29,12 @@
         </button>
 
         <article v-else-if="node.state === 'current'" class="current">
-          <img class="current__bg" src="./figma/hero-nyc.png" width="350" height="210" alt="" />
+          <img class="current__bg" :src="figma('hero-nyc.png')" width="350" height="210" alt="" />
           <div class="current__scrim" />
           <div class="current__body">
             <img
               class="current__photo"
-              src="./figma/activity-tutor.png"
+              :src="figma('activity-tutor.png')"
               width="88"
               height="132"
               alt=""
@@ -44,7 +44,7 @@
               <h2>Let’s travel to New York</h2>
               <button class="current__cta" type="button" @click="$emit('start')">
                 <span>Start</span>
-                <img src="./figma/icon-play.svg" width="20" height="20" alt="" />
+                <img :src="figma('icon-play.svg')" width="20" height="20" alt="" />
               </button>
             </div>
           </div>
@@ -73,6 +73,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 import { nextTick, onMounted, ref } from 'vue';
 
 defineEmits(['start', 'streak']);

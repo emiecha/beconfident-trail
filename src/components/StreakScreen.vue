@@ -11,7 +11,7 @@
         </button>
       </div>
       <h1>15 consecutive days</h1>
-      <img class="hero__flame" src="./figma/icon-flame.svg" width="64" height="64" alt="" />
+      <img class="hero__flame" :src="figma('icon-flame.svg')" width="64" height="64" alt="" />
       <p class="hero__record">Record: 50 days</p>
     </header>
 
@@ -29,7 +29,7 @@
 
       <aside class="owl">
         <p>Keep your streak going from Coruja on BeConfident</p>
-        <img src="./figma/be-face.svg" width="56" height="56" alt="" />
+        <img :src="figma('be-face.svg')" width="56" height="56" alt="" />
       </aside>
 
       <h2>Streak calendar</h2>
@@ -66,19 +66,19 @@
       </div>
       <div class="stamps">
         <article class="stamp stamp--on">
-          <img src="./figma/stamp-star.svg" width="86" height="86" alt="" />
+          <img :src="figma('stamp-star.svg')" width="86" height="86" alt="" />
           <p>Tourist</p>
         </article>
         <article class="stamp stamp--on">
-          <img src="./figma/stamp-star.svg" width="86" height="86" alt="" />
+          <img :src="figma('stamp-star.svg')" width="86" height="86" alt="" />
           <p>Backpacker</p>
         </article>
         <article class="stamp stamp--on">
-          <img src="./figma/stamp-star.svg" width="86" height="86" alt="" />
+          <img :src="figma('stamp-star.svg')" width="86" height="86" alt="" />
           <p>Pilot</p>
         </article>
         <article class="stamp">
-          <img src="./figma/stamp-star-muted.svg" width="86" height="86" alt="" />
+          <img :src="figma('stamp-star-muted.svg')" width="86" height="86" alt="" />
           <p>Nomad</p>
         </article>
       </div>
@@ -92,6 +92,7 @@
 </template>
 
 <script setup>
+import { figma } from '../figma.js';
 defineEmits(['close']);
 
 function dayClass(n) {
