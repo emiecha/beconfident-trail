@@ -14,7 +14,7 @@
       @streak="openSheet('streak')"
     />
 
-    <PlaceholderScreen v-else :tab="tab" />
+    <PlaceholderScreen v-else :tab="tab" @start="openSheet('activity')" />
 
     <TabBar :tab="tab" :variant="variant" @update:tab="tab = $event" />
 
@@ -69,6 +69,7 @@ watch(
   () => props.variant,
   (next) => {
     tab.value = next === 'path' ? 'path' : 'trail';
+    sheet.value = null;
   },
 );
 

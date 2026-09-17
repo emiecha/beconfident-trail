@@ -11,32 +11,29 @@
     </button>
     <button
       class="tab"
-      :class="{ 'tab--active': tab === 'ranking' }"
+      :class="{ 'tab--active': tab === 'learn' }"
       type="button"
-      @click="$emit('update:tab', 'ranking')"
+      @click="$emit('update:tab', 'learn')"
     >
-      <img src="/figma/icon-trophy.svg" width="24" height="24" alt="" />
-      <span>Ranking</span>
-    </button>
-    <button class="tab tab--be" type="button" @click="$emit('update:tab', 'be')">
-      <img class="tab__be" src="/figma/be-mascot.svg" width="69" height="69" alt="Be" />
+      <i :class="tab === 'learn' ? 'ri-book-open-fill' : 'ri-book-open-line'" />
+      <span>Learn</span>
     </button>
     <button
       class="tab"
-      :class="{ 'tab--active': tab === 'clube' }"
+      :class="{ 'tab--active': tab === 'social' }"
       type="button"
-      @click="$emit('update:tab', 'clube')"
+      @click="$emit('update:tab', 'social')"
     >
-      <img src="/figma/icon-group.svg" width="24" height="24" alt="" />
-      <span>Club</span>
+      <i :class="tab === 'social' ? 'ri-group-2-fill' : 'ri-group-2-line'" />
+      <span>Social</span>
     </button>
     <button
       class="tab"
-      :class="{ 'tab--active': tab === 'perfil' }"
+      :class="{ 'tab--active': tab === 'profile' }"
       type="button"
-      @click="$emit('update:tab', 'perfil')"
+      @click="$emit('update:tab', 'profile')"
     >
-      <span class="tab__avatar">
+      <span class="tab__avatar" :class="{ 'tab__avatar--on': tab === 'profile' }">
         <img src="/figma/avatar-sm.png" width="24" height="24" alt="" />
       </span>
       <span>Profile</span>
@@ -73,13 +70,12 @@ const primaryIcon = computed(() => {
   z-index: 5;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  width: 390px;
+  justify-content: space-around;
+  width: 100%;
   height: 86px;
-  padding: 16px;
+  padding: 12px 8px 28px;
   background: #f5f4fa;
   border-radius: 16px 16px 0 0;
-  overflow: visible;
 }
 
 .tab {
@@ -88,7 +84,8 @@ const primaryIcon = computed(() => {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  width: 60px;
+  flex: 1;
+  max-width: 88px;
   height: 48px;
   color: #474554;
   font: 400 12px/1.1 var(--bc-font-sans);
@@ -101,32 +98,9 @@ const primaryIcon = computed(() => {
   height: 24px;
 }
 
-.tab img {
-  width: 24px;
-  height: 24px;
-}
-
-.tab img.tab__be {
-  width: 69px;
-  height: 69px;
-}
-
 .tab--active {
   color: #8134fe;
   font-weight: 500;
-}
-
-.tab--be {
-  width: 60px;
-  height: 57px;
-  margin-top: -8px;
-}
-
-.tab__be {
-  width: 69px;
-  height: 69px;
-  margin-top: -6px;
-  filter: drop-shadow(0 0 12px rgba(129, 52, 254, 0.4));
 }
 
 .tab__avatar {
@@ -134,6 +108,10 @@ const primaryIcon = computed(() => {
   height: 24px;
   border-radius: 999px;
   overflow: hidden;
+}
+
+.tab__avatar--on {
+  box-shadow: 0 0 0 2px #8134fe;
 }
 
 .tab__avatar img {

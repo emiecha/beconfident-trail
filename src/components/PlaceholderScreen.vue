@@ -4,11 +4,22 @@
       <p class="place__kicker">{{ copy.kicker }}</p>
       <h1>{{ copy.title }}</h1>
       <p>{{ copy.body }}</p>
+      <button class="place__cta" type="button" @click="$emit('start')">
+        Start practising
+      </button>
     </div>
-    <div v-if="tab === 'be'" class="place__be">
-      <img src="/figma/be-mascot.svg" width="96" height="96" alt="Be" />
-      <p>Realtime conversation would live here. Not part of this draft.</p>
-    </div>
+
+    <ul class="place__list">
+      <li v-for="item in copy.items" :key="item.title" class="place__card">
+        <span class="place__icon">
+          <i :class="item.icon" />
+        </span>
+        <div>
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.body }}</p>
+        </div>
+      </li>
+    </ul>
   </section>
 </template>
 
@@ -19,32 +30,44 @@ const props = defineProps({
   tab: { type: String, required: true },
 });
 
+defineEmits(['start']);
+
 const copy = computed(() => {
-  if (props.tab === 'ranking') {
+  if (props.tab === 'social') {
     return {
-      kicker: 'Ranking',
-      title: 'Your place in the club',
-      body: 'Placeholder. Ranking stays on the tab bar for now — moving it off is a later recommendation.',
+      kicker: 'Page 3',
+      title: 'Social',
+      body: 'Ranking, community and invites live here — not on the nav bar.',
+      items: [
+        { icon: 'ri-trophy-line', title: 'Ranking', body: 'Your place in the club.' },
+        { icon: 'ri-id-card-line', title: 'Passport', body: 'Stamps from trails you finish.' },
+        { icon: 'ri-user-add-line', title: 'Invite friends', body: 'Bring someone into the loop.' },
+        { icon: 'ri-group-2-line', title: 'Community', body: 'Events, notices and the feed.' },
+      ],
     };
   }
-  if (props.tab === 'clube') {
+  if (props.tab === 'profile') {
     return {
-      kicker: 'Club',
-      title: 'Community',
-      body: 'Events, notices and the feed would live here.',
-    };
-  }
-  if (props.tab === 'perfil') {
-    return {
-      kicker: 'Profile',
-      title: 'Your account',
-      body: 'Progress, certificates and settings.',
+      kicker: 'Page 4',
+      title: 'Profile',
+      body: 'Account and settings. The loop still starts with one tap.',
+      items: [
+        { icon: 'ri-user-3-line', title: 'Your account', body: 'Name, level and plan.' },
+        { icon: 'ri-award-line', title: 'Certificates', body: 'What the trail added up to.' },
+        { icon: 'ri-settings-3-line', title: 'Settings', body: 'Notifications, language, privacy.' },
+      ],
     };
   }
   return {
-    kicker: 'Be',
-    title: 'Talk with Be',
-    body: 'Entry point to realtime conversation. Off the nav bar is a later recommendation.',
+    kicker: 'Page 2',
+    title: 'Other learning',
+    body: 'Be and the mentors moved off the bar. They support the loop; they don’t own a tab.',
+    items: [
+      { icon: 'ri-robot-2-line', title: 'AI mentor', body: 'Free chat, ideally on WhatsApp.' },
+      { icon: 'ri-user-star-line', title: 'Digital twins', body: 'Practise with a specific tutor.' },
+      { icon: 'ri-bear-smile-line', title: 'Be', body: 'Realtime conversation, as a destination.' },
+      { icon: 'ri-error-warning-line', title: 'Review mistakes', body: 'What the last activity flagged.' },
+    ],
   };
 });
 </script>
@@ -52,50 +75,98 @@ const copy = computed(() => {
 <style scoped>
 .place {
   height: 100%;
-  padding: 88px 24px 120px;
-  background: linear-gradient(180deg, #20044e 0%, #fff 42%);
+  overflow-y: auto;
+  padding-bottom: 120px;
+  background: #fafafb;
+  scrollbar-width: none;
+}
+
+.place::-webkit-scrollbar {
+  display: none;
 }
 
 .place__hero {
+  padding: 72px 20px 24px;
   color: #fff;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(214, 189, 255, 0.4) 0%, transparent 55%),
+    linear-gradient(135deg, #20044e 0%, #3e0798 55%, #8134fe 130%);
 }
 
 .place__kicker {
   font: 500 11px/1 var(--bc-font-sans);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.8;
-}
-
-.place h1 {
-  font: 600 32px/1.1 var(--bc-font-sans);
-}
-
-.place p {
-  font: 400 15px/1.45 var(--bc-font-sans);
   color: rgba(255, 255, 255, 0.78);
-  max-width: 300px;
 }
 
-.place__be {
-  margin-top: 48px;
+.place__hero h1 {
+  font: 600 28px/1.1 var(--bc-font-sans);
+  letter-spacing: -0.02em;
+}
+
+.place__hero > p {
+  font: 400 14px/1.45 var(--bc-font-sans);
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 320px;
+}
+
+.place__cta {
+  margin-top: 6px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  background: #fff;
+  color: #3e0798;
+  font: 500 14px/1 var(--bc-font-sans);
+}
+
+.place__list {
+  list-style: none;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  text-align: center;
+  gap: 10px;
 }
 
-.place__be img {
-  width: 96px;
-  height: 96px;
-  filter: drop-shadow(0 0 18px rgba(129, 52, 254, 0.45));
+.place__card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #eeeef1;
+  border-radius: 16px;
 }
 
-.place__be p {
+.place__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #f2ebff;
+  color: #8134fe;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.place__icon i {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.place__card h2 {
+  font: 600 15px/1.25 var(--bc-font-sans);
+  color: #27202c;
+}
+
+.place__card p {
+  margin-top: 4px;
+  font: 400 13px/1.35 var(--bc-font-sans);
   color: #42364a;
 }
 </style>
