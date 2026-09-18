@@ -9,7 +9,7 @@
       <section class="lesson">
         <button class="lesson__card" type="button" @click="$emit('practice')">
           <span class="lesson__top">
-            <img :src="figma('module-continue.png')" width="124" height="124" alt="" />
+            <img :src="figma('module-continue.png')" width="88" height="88" alt="" />
             <span class="lesson__copy">
               <strong>How to go to New York</strong>
               <span>New York · 1 of 5 activities</span>
@@ -225,11 +225,12 @@ function selectTutor(id) {
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: 14px;
-  border: 1px solid #eeeef1;
+  padding: 16px;
+  border: 1.5px solid #d6bdff;
   border-radius: 16px;
   text-align: left;
   background: #fff;
+  box-shadow: 0 10px 28px rgba(129, 52, 254, 0.12);
 }
 
 .lesson__top {
@@ -241,11 +242,11 @@ function selectTutor(id) {
 }
 
 .lesson__card img {
-  width: 124px;
-  height: 124px;
+  width: 88px;
+  height: 88px;
   object-fit: cover;
   object-position: 50% 18%;
-  border-radius: 14px;
+  border-radius: 12px;
   flex-shrink: 0;
 }
 
