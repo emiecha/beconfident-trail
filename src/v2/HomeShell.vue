@@ -20,6 +20,7 @@
 
     <CommunityScreen
       v-else-if="tab === 'community'"
+      plain-events
       @invite="openSheet('invite')"
       @ranking="openSheet('ranking')"
     />

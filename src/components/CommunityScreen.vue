@@ -1,5 +1,5 @@
 <template>
-  <div class="community">
+  <div class="community" :class="{ 'community--peek': plainEvents }">
     <header class="community__head">
       <h1>Community</h1>
     </header>
@@ -14,7 +14,7 @@
       <InviteFriendsTile label="Passport" remix="ri-passport-line" />
     </div>
 
-    <div class="tabs" role="tablist" aria-label="Community sections">
+    <div v-if="!plainEvents" class="tabs" role="tablist" aria-label="Community sections">
       <button
         class="tabs__btn"
         :class="{ 'tabs__btn--on': feed === 'events' }"
@@ -37,8 +37,8 @@
       </button>
     </div>
 
-    <template v-if="feed === 'events'">
-      <h2 class="block-title">Today’s event</h2>
+    <template v-if="plainEvents || feed === 'events'">
+      <h2 class="block-title">{{ plainEvents ? 'Events' : 'Today’s event' }}</h2>
 
       <article class="hero">
         <img class="hero__photo" :src="figma('event-today.png')" width="350" height="409" alt="" />
@@ -143,6 +143,10 @@ import InviteFriendsTile from './InviteFriendsTile.vue';
 
 defineEmits(['invite', 'ranking']);
 
+defineProps({
+  plainEvents: { type: Boolean, default: false },
+});
+
 const feed = ref('events');
 const todayIn = ref(false);
 const interviewIn = ref(false);
@@ -155,6 +159,18 @@ const interviewIn = ref(false);
   padding: 68px 18px 120px;
   background: #fff;
   scrollbar-width: none;
+}
+
+.community--peek .hero {
+  height: 300px;
+}
+
+.community--peek .hero__scrim {
+  height: 200px;
+}
+
+.community--peek .dots {
+  margin-bottom: 8px;
 }
 
 .community::-webkit-scrollbar {

@@ -1,40 +1,59 @@
 <template>
-  <div class="home" :class="{ 'home--toast': toastOpen }">
+  <div class="home">
     <button class="streak" type="button" @click="$emit('streak')">
       <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
       <span>{{ streakDays }} days</span>
     </button>
 
     <div class="home__main">
-      <section class="active" :aria-busy="switching">
-        <template v-if="switching">
-          <div class="skel skel--photo" />
-          <div class="active__copy">
-            <span class="skel skel--kicker" />
-            <span class="skel skel--name" />
-            <span class="skel skel--cta" />
-            <span class="skel skel--ghost" />
-          </div>
-        </template>
-        <template v-else>
-          <div class="active__photo">
-            <img :src="active.hero" width="120" height="120" :alt="active.name" />
-            <img class="active__flag" :src="active.flag" width="28" height="28" alt="" />
-          </div>
-          <div class="active__copy">
-            <p class="active__kicker">Your tutor</p>
-            <h1>{{ active.name }}</h1>
-            <button class="active__cta" type="button" @click="$emit('practice')">Practice</button>
-            <button class="active__talk" type="button" @click="$emit('talk', active.name)">
-              Talk with {{ active.name }}
-            </button>
-          </div>
-        </template>
+      <section class="lesson">
+        <p class="lesson__kicker">Up next</p>
+        <button class="lesson__card" type="button" @click="$emit('practice')">
+          <img :src="figma('module-continue.png')" width="88" height="88" alt="" />
+          <span class="lesson__copy">
+            <strong>How to go to New York</strong>
+            <span>New York · 1 of 5 activities</span>
+          </span>
+          <span class="lesson__cta">
+            Practice
+            <i class="ri-arrow-right-s-line" />
+          </span>
+        </button>
       </section>
 
-      <section class="block">
+      <section class="tutor" :aria-busy="switching">
+        <h2>Talk with your tutor</h2>
+        <div class="active">
+          <template v-if="switching">
+            <div class="skel skel--photo" />
+            <div class="active__copy">
+              <span class="skel skel--kicker" />
+              <span class="skel skel--name" />
+            </div>
+          </template>
+          <template v-else>
+            <button
+              class="active__photo"
+              type="button"
+              :aria-label="`Talk with ${active.name}`"
+              @click="$emit('talk', active.name)"
+            >
+              <img :src="active.hero" width="96" height="96" :alt="active.name" />
+              <img class="active__flag" :src="active.flag" width="24" height="24" alt="" />
+              <span class="active__talk">
+                <i class="ri-chat-3-fill" />
+                Talk
+              </span>
+            </button>
+            <div class="active__copy">
+              <p class="active__kicker">Your tutor</p>
+              <p class="active__name">{{ active.name }}</p>
+              <p class="active__hint">Tap the photo to start a conversation</p>
+            </div>
+          </template>
+        </div>
         <header class="block__head">
-          <h2>Other tutors</h2>
+          <h3>Change tutor</h3>
           <button class="block__all" type="button">
             See all
             <i class="ri-arrow-right-s-line" />
@@ -106,22 +125,6 @@
         <i class="ri-arrow-right-s-line" />
       </button>
     </div>
-
-    <aside v-if="toastOpen" class="toast" role="status">
-      <div class="toast__copy">
-        <img :src="figma('icon-whatsapp.svg')" width="20" height="20" alt="" />
-        <div class="toast__text">
-          <p class="toast__kicker">Did you know?</p>
-          <p class="toast__line">You can talk to your tutor on WhatsApp too.</p>
-        </div>
-        <button class="toast__close" type="button" aria-label="Dismiss" @click="toastOpen = false">
-          <i class="ri-close-line" />
-        </button>
-      </div>
-      <a class="toast__cta" href="https://wa.me/" target="_blank" rel="noopener noreferrer">
-        Open WhatsApp
-      </a>
-    </aside>
   </div>
 </template>
 
@@ -135,7 +138,6 @@ defineProps({
   streakDays: { type: Number, default: 2 },
 });
 
-const toastOpen = ref(true);
 const switching = ref(false);
 const activeId = ref('karina');
 
@@ -197,36 +199,121 @@ function selectTutor(id) {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  padding: 72px 16px 12px;
+  padding: 72px 16px 96px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.home:not(.home--toast) .home__main {
-  padding-bottom: 96px;
+.lesson {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.lesson__kicker {
+  font: 500 11px/1 var(--bc-font-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #928fa3;
+}
+
+.lesson__card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 14px 14px 12px;
+  border: 1px solid #eeeef1;
+  border-radius: 16px;
+  text-align: left;
+  background: #fff;
+}
+
+.lesson__card img {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  object-position: 50% 18%;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+
+.lesson__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.lesson__copy strong {
+  font: 600 20px/1.15 var(--bc-font-sans);
+  color: #27202c;
+}
+
+.lesson__copy span {
+  font: 400 13px/1.2 var(--bc-font-sans);
+  color: #707070;
+}
+
+.lesson__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: #8134fe;
+  color: #fff;
+  font: 500 14px/1 var(--bc-font-sans);
+  box-shadow: 0 8px 20px rgba(129, 52, 254, 0.28);
+  flex-shrink: 0;
+}
+
+.lesson__cta i {
+  font-size: 16px;
+}
+
+.tutor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.tutor > h2 {
+  font: 500 16px/1.1 var(--bc-font-sans);
+  color: #000;
+}
+
+.tutor h3 {
+  font: 500 14px/1.1 var(--bc-font-sans);
+  color: #000;
 }
 
 .active {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   text-align: left;
-  gap: 16px;
+  gap: 14px;
   flex-shrink: 0;
-  min-height: 132px;
 }
 
 .active__photo {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 108px;
   flex-shrink: 0;
+  padding: 0;
+  background: none;
 }
 
 .active__photo > img:first-child {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 999px;
@@ -235,10 +322,10 @@ function selectTutor(id) {
 
 .active__flag {
   position: absolute;
-  right: 4px;
-  bottom: 4px;
-  width: 28px;
-  height: 28px;
+  right: 2px;
+  top: 2px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
   border: 2px solid #fff;
   object-fit: cover;
@@ -259,32 +346,39 @@ function selectTutor(id) {
   color: #928fa3;
 }
 
-.active__copy h1 {
-  margin: 4px 0 10px;
-  font: 600 26px/1.1 var(--bc-font-sans);
+.active__name {
+  margin: 4px 0 6px;
+  font: 600 24px/1.1 var(--bc-font-sans);
   color: #27202c;
 }
 
-.active__cta,
-.active__talk {
-  width: 100%;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 12px;
-  font: 500 14px/1 var(--bc-font-sans);
+.active__hint {
+  font: 400 13px/1.3 var(--bc-font-sans);
+  color: #707070;
 }
 
-.active__cta {
-  background: #8134fe;
+.active__talk {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #20044e;
   color: #fff;
-  box-shadow: 0 10px 30px rgba(129, 52, 254, 0.35);
+  font: 500 12px/1 var(--bc-font-sans);
+  box-shadow: 0 6px 16px rgba(32, 4, 78, 0.35);
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
-.active__talk {
-  margin-top: 8px;
-  border: 1.5px solid #eeeef1;
-  color: #27202c;
-  background: #fff;
+.active__talk i {
+  font-size: 13px;
 }
 
 .block {
@@ -297,6 +391,7 @@ function selectTutor(id) {
 .block--masters {
   flex: 1;
   min-height: 0;
+  max-height: 148px;
 }
 
 .block__head {
@@ -398,9 +493,9 @@ function selectTutor(id) {
 
 .masters {
   display: flex;
-  gap: 10px;
-  flex: 1;
-  min-height: 168px;
+  gap: 8px;
+  height: 112px;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -450,15 +545,15 @@ function selectTutor(id) {
 }
 
 .master__name {
-  font: 600 14px/1.05 var(--bc-font-sans);
+  font: 600 12px/1.05 var(--bc-font-sans);
   letter-spacing: -0.16px;
   color: #fff;
   white-space: pre-line;
 }
 
 .master__role {
-  margin-top: 4px;
-  font: 400 12px/1 var(--bc-font-sans);
+  margin-top: 2px;
+  font: 400 11px/1 var(--bc-font-sans);
   color: #e0e0e0;
 }
 
@@ -472,6 +567,9 @@ function selectTutor(id) {
   border-radius: 16px;
   text-align: left;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  background: #fff;
 }
 
 .be img {
@@ -522,71 +620,6 @@ function selectTutor(id) {
   height: 16px;
 }
 
-.toast {
-  flex-shrink: 0;
-  z-index: 4;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0 12px 92px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: #20044e;
-}
-
-.toast__copy {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.toast__copy img {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  margin-top: 1px;
-  filter: brightness(0) invert(1);
-}
-
-.toast__text {
-  flex: 1;
-  min-width: 0;
-}
-
-.toast__kicker {
-  font: 600 12px/1.2 var(--bc-font-sans);
-  color: #fff;
-}
-
-.toast__line {
-  margin-top: 2px;
-  font: 400 12px/1.2 var(--bc-font-sans);
-  color: rgba(255, 255, 255, 0.86);
-  white-space: nowrap;
-}
-
-.toast__cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  border-radius: 8px;
-  background: #fff;
-  color: #20044e;
-  font: 500 13px/1 var(--bc-font-sans);
-}
-
-.toast__close {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.toast__close i {
-  font-size: 16px;
-}
-
 .skel {
   display: block;
   background: #eeeef1;
@@ -599,8 +632,8 @@ function selectTutor(id) {
 }
 
 .skel--photo {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
   flex-shrink: 0;
 }
 
@@ -620,18 +653,6 @@ function selectTutor(id) {
   height: 22px;
   margin: 8px 0 12px;
   border-radius: 6px;
-}
-
-.skel--cta,
-.skel--ghost {
-  width: 100%;
-  height: 40px;
-  border-radius: 12px;
-}
-
-.skel--ghost {
-  margin-top: 8px;
-  background: #f5f4fa;
 }
 
 .skel--label {
