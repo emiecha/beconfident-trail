@@ -96,7 +96,9 @@
       </section>
 
       <button class="be" type="button" @click="$emit('be')">
-        <img :src="figma('be-face.svg')" width="64" height="64" alt="" />
+        <span class="be__orb">
+          <img :src="figma('be-face.svg')" width="64" height="64" alt="" />
+        </span>
         <span>
           <strong>Anything you’re unsure about in English?</strong>
           Let’s clear it up.
@@ -646,10 +648,18 @@ function selectTutor(id) {
   background: #fff;
 }
 
-.be img {
+.be__orb {
   width: 64px;
   height: 64px;
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
+}
+
+.be__orb img {
+  width: 64px;
+  height: 64px;
+  clip-path: circle(25px at 50% 50%);
 }
 
 .be span {
