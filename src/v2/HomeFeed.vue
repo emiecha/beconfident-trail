@@ -21,25 +21,12 @@
       </section>
 
       <section class="tutor" :aria-busy="switching">
-        <header class="tutor__head">
-          <h2>Talk with your tutor</h2>
-          <button
-            v-if="!switching"
-            class="active__switch"
-            type="button"
-            @click="picking = !picking"
-          >
-            Switch tutors
-            <i :class="picking ? 'ri-arrow-up-s-line' : 'ri-arrow-right-s-line'" />
-          </button>
-        </header>
         <div class="active">
           <template v-if="switching">
             <div class="skel skel--photo" />
             <div class="active__copy">
               <span class="skel skel--kicker" />
               <span class="skel skel--name" />
-              <span class="skel skel--switch" />
             </div>
           </template>
           <template v-else>
@@ -50,7 +37,7 @@
               @click="$emit('talk', active.name)"
             >
               <span class="active__photo">
-                <img :src="active.hero" width="128" height="128" :alt="active.name" />
+                <img :src="active.hero" width="144" height="144" :alt="active.name" />
                 <img class="active__flag" :src="active.flag" width="28" height="28" alt="" />
                 <span class="active__talk">
                   <i class="ri-chat-3-fill" />
@@ -63,29 +50,11 @@
                 <span class="active__hint">Let’s talk about whatever you want. This is yours — an open, personal conversation.</span>
               </span>
             </button>
+            <button class="active__switch" type="button" @click.stop="picking = true">
+              Switch tutors
+              <i class="ri-arrow-right-s-line" />
+            </button>
           </template>
-        </div>
-        <div v-if="picking" class="row">
-          <template v-if="switching">
-            <div v-for="n in 4" :key="`skel-${n}`" class="avatar" aria-hidden="true">
-              <span class="skel skel--avatar" />
-              <span class="skel skel--label" />
-            </div>
-          </template>
-          <button
-            v-else
-            v-for="tutor in others"
-            :key="tutor.id"
-            class="avatar"
-            type="button"
-            @click="selectTutor(tutor.id)"
-          >
-            <span class="avatar__img">
-              <img :src="tutor.photo" width="64" height="64" :alt="tutor.name" />
-              <img class="avatar__flag" :src="tutor.flag" width="18" height="18" alt="" />
-            </span>
-            <span>{{ tutor.name }}</span>
-          </button>
         </div>
       </section>
 
@@ -131,6 +100,29 @@
         <i class="ri-arrow-right-s-line" />
       </button>
     </div>
+
+    <Transition name="sheet">
+      <div v-if="picking" class="picker" @click.self="picking = false">
+        <div class="picker__sheet" role="dialog" aria-modal="true" aria-label="Switch tutors">
+          <div class="picker__handle" />
+          <h2>Switch tutors</h2>
+          <button
+            v-for="tutor in others"
+            :key="tutor.id"
+            class="picker__tutor"
+            type="button"
+            @click.stop="selectTutor(tutor.id)"
+          >
+            <span class="picker__avatar">
+              <img :src="tutor.photo" width="56" height="56" :alt="tutor.name" />
+              <img :src="tutor.flag" width="16" height="16" alt="" />
+            </span>
+            <span class="picker__name">{{ tutor.name }}</span>
+            <i class="ri-arrow-right-s-line" />
+          </button>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -185,17 +177,20 @@ const others = computed(() => tutors.filter((t) => t.id !== activeId.value));
 
 function selectTutor(id) {
   if (id === activeId.value || switching.value) return;
-  switching.value = true;
+  picking.value = false;
   window.setTimeout(() => {
-    activeId.value = id;
-    switching.value = false;
-    picking.value = false;
-  }, 520);
+    switching.value = true;
+    window.setTimeout(() => {
+      activeId.value = id;
+      switching.value = false;
+    }, 520);
+  }, 220);
 }
 </script>
 
 <style scoped>
 .home {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -286,19 +281,6 @@ function selectTutor(id) {
   flex-shrink: 0;
 }
 
-.tutor__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 22px;
-}
-
-.tutor__head h2 {
-  font: 500 16px/1.1 var(--bc-font-sans);
-  color: #000;
-}
-
 .active {
   position: relative;
   display: flex;
@@ -321,14 +303,14 @@ function selectTutor(id) {
 
 .active__photo {
   position: relative;
-  width: 128px;
-  height: 140px;
+  width: 144px;
+  height: 156px;
   flex-shrink: 0;
 }
 
 .active__photo > img:first-child {
-  width: 128px;
-  height: 128px;
+  width: 144px;
+  height: 144px;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 999px;
@@ -375,10 +357,13 @@ function selectTutor(id) {
 }
 
 .active__switch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  flex-shrink: 0;
   color: #8134fe;
   font: 500 13px/1.1 var(--bc-font-sans);
 }
@@ -418,17 +403,11 @@ function selectTutor(id) {
   flex-shrink: 0;
 }
 
-.block--masters {
-  flex: 1;
-  min-height: 0;
-}
-
 .masters {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  flex: 1;
-  min-height: 132px;
+  height: 152px;
   overflow: hidden;
 }
 
@@ -436,7 +415,7 @@ function selectTutor(id) {
   position: relative;
   flex: 1;
   min-width: 0;
-  height: 100%;
+  height: 152px;
   overflow: hidden;
   padding: 0;
   border-radius: 16px;
@@ -496,51 +475,6 @@ function selectTutor(id) {
   font-size: 18px;
 }
 
-.row {
-  display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.row::-webkit-scrollbar {
-  display: none;
-}
-
-.avatar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  color: #42364a;
-  font: 500 13px/1 var(--bc-font-sans);
-}
-
-.avatar__img {
-  position: relative;
-  width: 64px;
-  height: 64px;
-}
-
-.avatar__img > img:first-child {
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 999px;
-}
-
-.avatar__flag {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  border: 1.5px solid #fff;
-  object-fit: cover;
-}
-
 .master__photo {
   width: 100%;
   height: 100%;
@@ -575,16 +509,10 @@ function selectTutor(id) {
 }
 
 .master__name {
-  font: 600 13px/1.05 var(--bc-font-sans);
+  font: 600 12px/1.05 var(--bc-font-sans);
   letter-spacing: -0.16px;
   color: #fff;
   white-space: pre-line;
-}
-
-.master__role {
-  margin-top: 3px;
-  font: 400 12px/1 var(--bc-font-sans);
-  color: #e0e0e0;
 }
 
 .master__role {
@@ -598,6 +526,7 @@ function selectTutor(id) {
   align-items: center;
   gap: 12px;
   width: 100%;
+  margin-top: auto;
   padding: 8px 12px 8px 8px;
   border: 1px solid #eeeef1;
   border-radius: 16px;
@@ -668,8 +597,8 @@ function selectTutor(id) {
 }
 
 .skel--photo {
-  width: 128px;
-  height: 128px;
+  width: 144px;
+  height: 144px;
   flex-shrink: 0;
 }
 
@@ -702,6 +631,106 @@ function selectTutor(id) {
   width: 44px;
   height: 10px;
   border-radius: 4px;
+}
+
+.picker {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.picker__sheet {
+  width: 100%;
+  padding: 12px 20px 36px;
+  border-radius: 24px 24px 0 0;
+  background: #fff;
+}
+
+.picker__handle {
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 16px;
+  border-radius: 999px;
+  background: #eeeef1;
+}
+
+.picker__sheet h2 {
+  margin-bottom: 12px;
+  font: 600 22px/1.2 var(--bc-font-sans);
+  color: #27202c;
+}
+
+.picker__tutor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 0;
+  text-align: left;
+  border-bottom: 1px solid #eeeef1;
+}
+
+.picker__tutor:last-child {
+  border-bottom: 0;
+}
+
+.picker__avatar {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.picker__avatar img:first-child {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+.picker__avatar img:last-child {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #fff;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.picker__name {
+  flex: 1;
+  font: 500 16px/1.1 var(--bc-font-sans);
+  color: #27202c;
+}
+
+.picker__tutor i {
+  font-size: 20px;
+  color: #928fa3;
+}
+
+.sheet-enter-active,
+.sheet-leave-active {
+  transition: opacity 180ms ease;
+}
+
+.sheet-enter-active .picker__sheet,
+.sheet-leave-active .picker__sheet {
+  transition: transform 220ms ease;
+}
+
+.sheet-enter-from,
+.sheet-leave-to {
+  opacity: 0;
+}
+
+.sheet-enter-from .picker__sheet,
+.sheet-leave-to .picker__sheet {
+  transform: translateY(24px);
 }
 
 @keyframes pulse {
