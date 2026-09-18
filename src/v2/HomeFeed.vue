@@ -1,11 +1,13 @@
 <template>
   <div class="home">
-    <button class="streak" type="button" @click="$emit('streak')">
-      <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
-      <span>{{ streakDays }} days</span>
-    </button>
-
     <div class="home__main">
+      <header class="home__bar">
+        <p class="hello">Hi Emi</p>
+        <button class="streak" type="button" @click="$emit('streak')">
+          <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
+          <span>{{ streakDays }} days</span>
+        </button>
+      </header>
       <section class="lesson">
         <button class="lesson__card" type="button" @click="$emit('practice')">
           <span class="lesson__top">
@@ -204,10 +206,26 @@ function selectTutor(id) {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  padding: 68px 16px 96px;
+  padding: 54px 16px 96px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+}
+
+.home__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  min-height: 32px;
+  padding-top: 4px;
+}
+
+.hello {
+  margin: 0;
+  font: 600 22px/1.1 var(--bc-font-sans);
+  color: #27202c;
 }
 
 .lesson {
@@ -583,10 +601,6 @@ function selectTutor(id) {
 }
 
 .streak {
-  position: absolute;
-  top: 54px;
-  right: 16px;
-  z-index: 2;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -597,6 +611,7 @@ function selectTutor(id) {
   border-radius: 180px;
   color: #000;
   font: 500 13px/1 var(--bc-font-sans);
+  flex-shrink: 0;
 }
 
 .streak__icon {
