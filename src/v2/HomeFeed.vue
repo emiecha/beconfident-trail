@@ -99,7 +99,7 @@
         <span class="be__orb">
           <img :src="figma('be-face.svg')" width="64" height="64" alt="" />
         </span>
-        <span>
+        <span class="be__copy">
           <strong>Anything you’re unsure about in English?</strong>
           Let’s clear it up.
         </span>
@@ -659,10 +659,11 @@ function selectTutor(id) {
 .be__orb img {
   width: 64px;
   height: 64px;
-  clip-path: circle(25px at 50% 50%);
+  transform: scale(0.7);
+  transform-origin: center;
 }
 
-.be span {
+.be__copy {
   display: flex;
   flex-direction: column;
   gap: 4px;
