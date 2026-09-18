@@ -16,7 +16,7 @@
       @click="$emit('update:tab', 'tutors')"
     >
       <i :class="tab === 'tutors' ? 'ri-user-voice-fill' : 'ri-user-voice-line'" />
-      <span>Tutors</span>
+      <span>AI tutors</span>
     </button>
     <button
       class="tab"
