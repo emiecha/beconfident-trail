@@ -39,7 +39,7 @@
       </button>
     </section>
 
-    <button class="add" type="button" @click="$emit('invite')">
+    <button v-if="addFriends" class="add" type="button" @click="$emit('invite')">
       <img :src="figma('icon-user-add.svg')" width="20" height="20" alt="" />
       Add friends
     </button>
@@ -221,7 +221,11 @@
 
 <script setup>
 import { figma } from '../figma.js';
+
 defineEmits(['invite']);
+defineProps({
+  addFriends: { type: Boolean, default: true },
+});
 
 const friends = [
   { initial: 'L', name: 'Ana Silva', color: '#cfe5fc' },

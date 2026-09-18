@@ -25,7 +25,7 @@
       @ranking="openSheet('ranking')"
     />
 
-    <ProfileScreen v-else-if="tab === 'profile'" @invite="openSheet('invite')" />
+    <ProfileScreen v-else-if="tab === 'profile'" :add-friends="false" />
 
     <TabBar v-if="!fullSheet" :tab="tab" @update:tab="tab = $event" />
 
