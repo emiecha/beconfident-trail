@@ -49,10 +49,10 @@
                 </span>
               </span>
               <span class="active__copy">
-                <span class="active__kicker">Your AI tutor</span>
+                <span class="active__kicker">Your tutor</span>
                 <span class="active__name">{{ active.name }}</span>
+                <span class="active__hint">Let’s talk about whatever you want. This is yours — an open, personal conversation.</span>
               </span>
-              <span class="active__hint">Let’s talk about whatever you want.<br />This is yours — an open, personal conversation.</span>
             </button>
             <button class="active__switch" type="button" @click.stop="openPicker">
               Switch tutors
@@ -379,40 +379,44 @@ function selectTutor(id) {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 0 0 auto;
+  flex: 1 1 158px;
+  min-height: 0;
 }
 
 .active {
   position: relative;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   text-align: left;
   gap: 14px;
-  flex: none;
+  flex: 1;
+  min-height: 0;
 }
 
 .active__hit {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 8px 14px;
+  align-items: center;
+  gap: 14px;
   min-width: 0;
-  width: 100%;
-  padding: 20px 8px 0 0;
+  height: 100%;
+  flex: 1;
+  padding: 0 8px 0 0;
   text-align: left;
 }
 
 .active__photo {
   position: relative;
-  width: 144px;
-  height: 156px;
+  width: auto;
+  height: 100%;
+  max-height: 164px;
+  aspect-ratio: 144 / 156;
   flex-shrink: 0;
 }
 
 .active__photo > img:first-child {
-  width: 144px;
-  height: 144px;
+  width: 92.3%;
+  height: 92.3%;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 999px;
@@ -434,29 +438,26 @@ function selectTutor(id) {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
   min-width: 0;
   flex: 1;
-  padding: 0;
+  padding-right: 4px;
 }
 
 .active__kicker {
-  white-space: nowrap;
+  max-width: calc(100% - 108px);
   font: 500 11px/1 var(--bc-font-sans);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #928fa3;
 }
 
 .active__name {
-  margin: 6px 0 0;
+  margin: 6px 0 8px;
   font: 600 26px/1.1 var(--bc-font-sans);
   color: #27202c;
 }
 
 .active__hint {
-  flex: 1 0 100%;
-  width: 100%;
   font: 400 13px/1.35 var(--bc-font-sans);
   color: #42364a;
 }
