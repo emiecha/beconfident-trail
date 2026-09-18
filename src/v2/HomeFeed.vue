@@ -49,7 +49,7 @@
                 </span>
               </span>
               <span class="active__copy">
-                <span class="active__kicker">Your tutor</span>
+                <span class="active__kicker">Your AI tutor</span>
                 <span class="active__name">{{ active.name }}</span>
                 <span class="active__hint">Let’s talk about whatever you want. This is yours — an open, personal conversation.</span>
               </span>
@@ -444,9 +444,9 @@ function selectTutor(id) {
 }
 
 .active__kicker {
-  max-width: calc(100% - 108px);
+  white-space: nowrap;
   font: 500 11px/1 var(--bc-font-sans);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #928fa3;
 }
