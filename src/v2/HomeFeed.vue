@@ -9,14 +9,14 @@
       <section class="lesson">
         <p class="lesson__kicker">Up next</p>
         <button class="lesson__card" type="button" @click="$emit('practice')">
-          <img :src="figma('module-continue.png')" width="88" height="88" alt="" />
+          <img :src="figma('module-continue.png')" width="108" height="108" alt="" />
           <span class="lesson__copy">
             <strong>How to go to New York</strong>
             <span>New York · 1 of 5 activities</span>
-          </span>
-          <span class="lesson__cta">
-            Practice
-            <i class="ri-arrow-right-s-line" />
+            <span class="lesson__cta">
+              Practice
+              <i class="ri-arrow-right-s-line" />
+            </span>
           </span>
         </button>
       </section>
@@ -29,37 +29,37 @@
             <div class="active__copy">
               <span class="skel skel--kicker" />
               <span class="skel skel--name" />
+              <span class="skel skel--switch" />
             </div>
           </template>
           <template v-else>
             <button
-              class="active__photo"
+              class="active__hit"
               type="button"
               :aria-label="`Talk with ${active.name}`"
               @click="$emit('talk', active.name)"
             >
-              <img :src="active.hero" width="96" height="96" :alt="active.name" />
-              <img class="active__flag" :src="active.flag" width="24" height="24" alt="" />
-              <span class="active__talk">
-                <i class="ri-chat-3-fill" />
-                Talk
+              <span class="active__photo">
+                <img :src="active.hero" width="128" height="128" :alt="active.name" />
+                <img class="active__flag" :src="active.flag" width="28" height="28" alt="" />
+                <span class="active__talk">
+                  <i class="ri-chat-3-fill" />
+                  Talk
+                </span>
+              </span>
+              <span class="active__copy">
+                <span class="active__kicker">Your tutor</span>
+                <span class="active__name">{{ active.name }}</span>
+                <span class="active__hint">Let’s talk about whatever you want. This is yours — an open, personal conversation.</span>
               </span>
             </button>
-            <div class="active__copy">
-              <p class="active__kicker">Your tutor</p>
-              <p class="active__name">{{ active.name }}</p>
-              <p class="active__hint">Tap the photo to start a conversation</p>
-            </div>
+            <button class="active__switch" type="button" @click.stop="picking = !picking">
+              Switch tutors
+              <i :class="picking ? 'ri-arrow-up-s-line' : 'ri-arrow-right-s-line'" />
+            </button>
           </template>
         </div>
-        <header class="block__head">
-          <h3>Change tutor</h3>
-          <button class="block__all" type="button">
-            See all
-            <i class="ri-arrow-right-s-line" />
-          </button>
-        </header>
-        <div class="row">
+        <div v-if="picking" class="row">
           <template v-if="switching">
             <div v-for="n in 4" :key="`skel-${n}`" class="avatar" aria-hidden="true">
               <span class="skel skel--avatar" />
@@ -139,6 +139,7 @@ defineProps({
 });
 
 const switching = ref(false);
+const picking = ref(false);
 const activeId = ref('karina');
 
 const tutors = [
@@ -182,6 +183,7 @@ function selectTutor(id) {
   window.setTimeout(() => {
     activeId.value = id;
     switching.value = false;
+    picking.value = false;
   }, 520);
 }
 </script>
@@ -222,9 +224,9 @@ function selectTutor(id) {
 .lesson__card {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   width: 100%;
-  padding: 14px 14px 14px 12px;
+  padding: 16px 16px 16px 14px;
   border: 1px solid #eeeef1;
   border-radius: 16px;
   text-align: left;
@@ -232,8 +234,8 @@ function selectTutor(id) {
 }
 
 .lesson__card img {
-  width: 88px;
-  height: 88px;
+  width: 108px;
+  height: 108px;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 14px;
@@ -249,25 +251,27 @@ function selectTutor(id) {
 }
 
 .lesson__copy strong {
-  font: 600 20px/1.15 var(--bc-font-sans);
+  font: 600 22px/1.15 var(--bc-font-sans);
   color: #27202c;
 }
 
 .lesson__copy span {
-  font: 400 13px/1.2 var(--bc-font-sans);
+  font: 400 14px/1.2 var(--bc-font-sans);
   color: #707070;
 }
 
 .lesson__cta {
   display: inline-flex;
   align-items: center;
+  align-self: flex-start;
   gap: 2px;
-  height: 44px;
+  height: 40px;
+  margin-top: 4px;
   padding: 0 16px;
   border-radius: 12px;
-  background: #8134fe;
+  background: #3e0798;
   color: #fff;
-  font: 500 14px/1 var(--bc-font-sans);
+  font: 600 14px/1 var(--bc-font-sans);
   box-shadow: 0 8px 20px rgba(129, 52, 254, 0.28);
   flex-shrink: 0;
 }
@@ -294,6 +298,7 @@ function selectTutor(id) {
 }
 
 .active {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -302,18 +307,26 @@ function selectTutor(id) {
   flex-shrink: 0;
 }
 
+.active__hit {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1;
+  padding: 0 8px 0 0;
+  text-align: left;
+}
+
 .active__photo {
   position: relative;
-  width: 96px;
-  height: 108px;
+  width: 128px;
+  height: 140px;
   flex-shrink: 0;
-  padding: 0;
-  background: none;
 }
 
 .active__photo > img:first-child {
-  width: 96px;
-  height: 96px;
+  width: 128px;
+  height: 128px;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 999px;
@@ -322,10 +335,10 @@ function selectTutor(id) {
 
 .active__flag {
   position: absolute;
-  right: 2px;
-  top: 2px;
-  width: 24px;
-  height: 24px;
+  right: 4px;
+  top: 4px;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   border: 2px solid #fff;
   object-fit: cover;
@@ -337,9 +350,11 @@ function selectTutor(id) {
   align-items: flex-start;
   min-width: 0;
   flex: 1;
+  padding-right: 4px;
 }
 
 .active__kicker {
+  max-width: calc(100% - 108px);
   font: 500 11px/1 var(--bc-font-sans);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -347,14 +362,30 @@ function selectTutor(id) {
 }
 
 .active__name {
-  margin: 4px 0 6px;
-  font: 600 24px/1.1 var(--bc-font-sans);
+  margin: 6px 0 8px;
+  font: 600 26px/1.1 var(--bc-font-sans);
   color: #27202c;
 }
 
 .active__hint {
-  font: 400 13px/1.3 var(--bc-font-sans);
-  color: #707070;
+  font: 400 13px/1.35 var(--bc-font-sans);
+  color: #42364a;
+}
+
+.active__switch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #8134fe;
+  font: 500 13px/1.1 var(--bc-font-sans);
+}
+
+.active__switch i {
+  font-size: 18px;
 }
 
 .active__talk {
@@ -391,7 +422,7 @@ function selectTutor(id) {
 .block--masters {
   flex: 1;
   min-height: 0;
-  max-height: 148px;
+  max-height: 156px;
 }
 
 .block__head {
@@ -494,7 +525,7 @@ function selectTutor(id) {
 .masters {
   display: flex;
   gap: 8px;
-  height: 112px;
+  height: 120px;
   min-height: 0;
   overflow: hidden;
 }
@@ -545,10 +576,16 @@ function selectTutor(id) {
 }
 
 .master__name {
-  font: 600 12px/1.05 var(--bc-font-sans);
+  font: 600 13px/1.05 var(--bc-font-sans);
   letter-spacing: -0.16px;
   color: #fff;
   white-space: pre-line;
+}
+
+.master__role {
+  margin-top: 3px;
+  font: 400 12px/1 var(--bc-font-sans);
+  color: #e0e0e0;
 }
 
 .master__role {
@@ -632,8 +669,8 @@ function selectTutor(id) {
 }
 
 .skel--photo {
-  width: 96px;
-  height: 96px;
+  width: 128px;
+  height: 128px;
   flex-shrink: 0;
 }
 
@@ -652,6 +689,13 @@ function selectTutor(id) {
   width: 118px;
   height: 22px;
   margin: 8px 0 12px;
+  border-radius: 6px;
+}
+
+.skel--switch {
+  width: 128px;
+  height: 18px;
+  margin-top: 8px;
   border-radius: 6px;
 }
 
