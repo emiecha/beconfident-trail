@@ -8,13 +8,27 @@
       </button>
     </header>
 
-    <label class="search">
+    <button v-if="leadPractice" class="lesson" type="button" @click="$emit('practice')">
+      <span class="lesson__top">
+        <img :src="figma('module-continue.png')" width="104" height="104" alt="" />
+        <span class="lesson__copy">
+          <strong>How to go to New York</strong>
+          <span>New York · 1 of 5 activities</span>
+        </span>
+      </span>
+      <span class="lesson__cta">
+        Practice
+        <i class="ri-arrow-right-s-line" />
+      </span>
+    </button>
+
+    <label v-if="!leadPractice" class="search">
       <i class="ri-search-line" />
       <input type="search" placeholder="Search activity, module..." />
     </label>
 
     <h2 class="trail">
-      You’re on trail A1:
+      {{ leadPractice ? 'You are on Trail A1' : 'You’re on trail A1:' }}
       <span>Confident Beginnings</span>
     </h2>
     <button class="link" type="button">
@@ -34,25 +48,31 @@
       <i class="ri-arrow-right-s-line cert__chevron" />
     </button>
 
-    <p class="label">Continue where you left off</p>
-    <button class="resume" type="button" @click="$emit('practice')">
-      <img :src="figma('module-continue.png')" width="350" height="220" alt="" />
-      <span class="resume__scrim" />
-      <span class="chip chip--new">New</span>
-      <span class="resume__copy">
-        <strong>How to go to New York</strong>
-        <span class="bar bar--on-photo"><i style="width: 20%" /></span>
-        <span class="resume__meta">
-          <span>1 of 5 activities</span>
-          <span class="resume__go">
-            Continue
-            <i class="ri-arrow-right-s-line" />
+    <template v-if="!leadPractice">
+      <p class="label">Continue where you left off</p>
+      <button class="resume" type="button" @click="$emit('practice')">
+        <img :src="figma('module-continue.png')" width="350" height="220" alt="" />
+        <span class="resume__scrim" />
+        <span class="chip chip--new">New</span>
+        <span class="resume__copy">
+          <strong>How to go to New York</strong>
+          <span class="bar bar--on-photo"><i style="width: 20%" /></span>
+          <span class="resume__meta">
+            <span>1 of 5 activities</span>
+            <span class="resume__go">
+              Continue
+              <i class="ri-arrow-right-s-line" />
+            </span>
           </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </template>
 
     <p class="label">All modules</p>
+    <label v-if="leadPractice" class="search search--modules">
+      <i class="ri-search-line" />
+      <input type="search" placeholder="Search activity, module..." />
+    </label>
     <div class="grid">
       <button class="card" type="button" @click="$emit('invite')">
         <span class="card__cover card__cover--bonus">
@@ -111,6 +131,10 @@
 
 <script setup>
 import { figma } from '../figma.js';
+
+defineProps({
+  leadPractice: { type: Boolean, default: false },
+});
 
 const emit = defineEmits(['practice', 'invite']);
 
@@ -203,6 +227,74 @@ function openModule(mod) {
   font-size: 24px;
 }
 
+.lesson {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1.5px solid #d6bdff;
+  border-radius: 16px;
+  text-align: left;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(129, 52, 254, 0.12);
+}
+
+.lesson__top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.lesson img {
+  width: 104px;
+  height: 104px;
+  object-fit: cover;
+  object-position: 50% 18%;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.lesson__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.lesson__copy strong {
+  font: 600 22px/1.15 var(--bc-font-sans);
+  color: #27202c;
+}
+
+.lesson__copy span {
+  font: 400 14px/1.2 var(--bc-font-sans);
+  color: #707070;
+}
+
+.lesson__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #8134fe;
+  color: #fff;
+  font: 500 14px/1 var(--bc-font-sans);
+  box-shadow: 0 8px 20px rgba(129, 52, 254, 0.28);
+}
+
+.lesson__cta i {
+  font-size: 16px;
+}
+
 .search {
   display: flex;
   align-items: center;
@@ -230,6 +322,10 @@ function openModule(mod) {
 
 .search input::placeholder {
   color: #a9a9a9;
+}
+
+.search--modules {
+  margin-bottom: 16px;
 }
 
 .trail {

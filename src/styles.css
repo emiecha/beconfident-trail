@@ -82,8 +82,9 @@ img {
 }
 
 .studio__switch {
-  display: inline-flex;
-  margin-top: 14px;
+  display: flex;
+  width: max-content;
+  margin: 14px auto 0;
   padding: 4px;
   gap: 4px;
   border-radius: 999px;
@@ -103,6 +104,15 @@ img {
 .studio__switch button.is-on {
   background: #fff;
   color: #3e0798;
+}
+
+.studio__versions {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.studio__versions button {
+  min-width: 0;
 }
 
 .phone {
@@ -127,12 +137,18 @@ img {
   }
 
   .studio__meta h1,
-  .studio__meta p {
+  .studio__meta p,
+  .studio__versions {
     display: none;
   }
 
   .studio__meta {
     padding: 10px 0 8px;
+  }
+
+  .studio--v2 .studio__meta,
+  .studio--v3 .studio__meta {
+    display: none;
   }
 
   .phone {
