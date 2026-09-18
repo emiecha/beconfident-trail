@@ -444,15 +444,16 @@ function selectTutor(id) {
 }
 
 .active__kicker {
-  max-width: calc(100% - 108px);
+  white-space: nowrap;
   font: 500 11px/1 var(--bc-font-sans);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #928fa3;
 }
 
 .active__name {
   margin: 6px 0 8px;
+  padding-right: 108px;
   font: 600 26px/1.1 var(--bc-font-sans);
   color: #27202c;
 }
@@ -464,7 +465,7 @@ function selectTutor(id) {
 
 .active__switch {
   position: absolute;
-  top: 0;
+  top: 18px;
   right: 0;
   z-index: 2;
   display: inline-flex;
