@@ -7,9 +7,8 @@
 
     <div class="home__main">
       <section class="lesson">
-        <p class="lesson__kicker">Up next</p>
         <button class="lesson__card" type="button" @click="$emit('practice')">
-          <img :src="figma('module-continue.png')" width="108" height="108" alt="" />
+          <img :src="figma('module-continue.png')" width="116" height="116" alt="" />
           <span class="lesson__copy">
             <strong>How to go to New York</strong>
             <span>New York · 1 of 5 activities</span>
@@ -22,7 +21,18 @@
       </section>
 
       <section class="tutor" :aria-busy="switching">
-        <h2>Talk with your tutor</h2>
+        <header class="tutor__head">
+          <h2>Talk with your tutor</h2>
+          <button
+            v-if="!switching"
+            class="active__switch"
+            type="button"
+            @click="picking = !picking"
+          >
+            Switch tutors
+            <i :class="picking ? 'ri-arrow-up-s-line' : 'ri-arrow-right-s-line'" />
+          </button>
+        </header>
         <div class="active">
           <template v-if="switching">
             <div class="skel skel--photo" />
@@ -52,10 +62,6 @@
                 <span class="active__name">{{ active.name }}</span>
                 <span class="active__hint">Let’s talk about whatever you want. This is yours — an open, personal conversation.</span>
               </span>
-            </button>
-            <button class="active__switch" type="button" @click.stop="picking = !picking">
-              Switch tutors
-              <i :class="picking ? 'ri-arrow-up-s-line' : 'ri-arrow-right-s-line'" />
             </button>
           </template>
         </div>
@@ -201,24 +207,16 @@ function selectTutor(id) {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  padding: 72px 16px 96px;
+  padding: 68px 16px 96px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .lesson {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   flex-shrink: 0;
-}
-
-.lesson__kicker {
-  font: 500 11px/1 var(--bc-font-sans);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #928fa3;
 }
 
 .lesson__card {
@@ -234,8 +232,8 @@ function selectTutor(id) {
 }
 
 .lesson__card img {
-  width: 108px;
-  height: 108px;
+  width: 116px;
+  height: 116px;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 14px;
@@ -255,7 +253,7 @@ function selectTutor(id) {
   color: #27202c;
 }
 
-.lesson__copy span {
+.lesson__copy > span:not(.lesson__cta) {
   font: 400 14px/1.2 var(--bc-font-sans);
   color: #707070;
 }
@@ -263,17 +261,18 @@ function selectTutor(id) {
 .lesson__cta {
   display: inline-flex;
   align-items: center;
-  align-self: flex-start;
+  justify-content: center;
+  align-self: stretch;
   gap: 2px;
+  width: 100%;
   height: 40px;
-  margin-top: 4px;
+  margin-top: 6px;
   padding: 0 16px;
   border-radius: 12px;
-  background: #3e0798;
+  background: #8134fe;
   color: #fff;
-  font: 600 14px/1 var(--bc-font-sans);
+  font: 500 14px/1 var(--bc-font-sans);
   box-shadow: 0 8px 20px rgba(129, 52, 254, 0.28);
-  flex-shrink: 0;
 }
 
 .lesson__cta i {
@@ -283,17 +282,20 @@ function selectTutor(id) {
 .tutor {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
-.tutor > h2 {
-  font: 500 16px/1.1 var(--bc-font-sans);
-  color: #000;
+.tutor__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 22px;
 }
 
-.tutor h3 {
-  font: 500 14px/1.1 var(--bc-font-sans);
+.tutor__head h2 {
+  font: 500 16px/1.1 var(--bc-font-sans);
   color: #000;
 }
 
@@ -373,13 +375,10 @@ function selectTutor(id) {
 }
 
 .active__switch {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 2px;
+  flex-shrink: 0;
   color: #8134fe;
   font: 500 13px/1.1 var(--bc-font-sans);
 }
@@ -422,7 +421,27 @@ function selectTutor(id) {
 .block--masters {
   flex: 1;
   min-height: 0;
-  max-height: 156px;
+}
+
+.masters {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex: 1;
+  min-height: 132px;
+  overflow: hidden;
+}
+
+.master {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #3e0798, #8134fe);
+  text-align: center;
 }
 
 .block__head {
@@ -520,26 +539,6 @@ function selectTutor(id) {
   border-radius: 999px;
   border: 1.5px solid #fff;
   object-fit: cover;
-}
-
-.masters {
-  display: flex;
-  gap: 8px;
-  height: 120px;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.master {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  overflow: hidden;
-  padding: 0;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #3e0798, #8134fe);
-  text-align: center;
 }
 
 .master__photo {
