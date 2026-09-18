@@ -41,7 +41,7 @@
               @click="$emit('talk', active.name)"
             >
               <span class="active__photo">
-                <img :src="active.hero" width="144" height="144" :alt="active.name" />
+                <img :src="active.hero" width="116" height="116" :alt="active.name" />
                 <img class="active__flag" :src="active.flag" width="28" height="28" alt="" />
                 <span class="active__talk">
                   <i class="ri-chat-3-fill" />
@@ -379,15 +379,16 @@ function selectTutor(id) {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 1 1 158px;
+  flex: 1 1 148px;
   min-height: 0;
+  padding: 12px 14px;
 }
 
 .active {
   position: relative;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   text-align: left;
   gap: 14px;
   flex: 1;
@@ -396,7 +397,7 @@ function selectTutor(id) {
 
 .active__hit {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
   min-width: 0;
   height: 100%;
@@ -407,16 +408,14 @@ function selectTutor(id) {
 
 .active__photo {
   position: relative;
-  width: auto;
-  height: 100%;
-  max-height: 164px;
-  aspect-ratio: 144 / 156;
+  width: 116px;
+  height: 128px;
   flex-shrink: 0;
 }
 
 .active__photo > img:first-child {
-  width: 92.3%;
-  height: 92.3%;
+  width: 116px;
+  height: 116px;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 999px;
@@ -440,7 +439,7 @@ function selectTutor(id) {
   align-items: flex-start;
   min-width: 0;
   flex: 1;
-  padding-right: 4px;
+  padding: 28px 4px 0 0;
 }
 
 .active__kicker {
@@ -506,8 +505,9 @@ function selectTutor(id) {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 0.7 1 168px;
+  flex: 0.45 1 128px;
   min-height: 0;
+  padding: 12px 14px 4px;
 }
 
 .masters {
@@ -515,8 +515,8 @@ function selectTutor(id) {
   justify-content: space-between;
   gap: 10px;
   flex: 1;
-  min-height: 136px;
-  max-height: 152px;
+  min-height: 104px;
+  max-height: 118px;
   overflow: hidden;
 }
 
@@ -635,6 +635,7 @@ function selectTutor(id) {
   align-items: center;
   gap: 12px;
   width: 100%;
+  margin-top: 24px;
   padding: 8px 12px 8px 8px;
   border: 1px solid #eeeef1;
   border-radius: 16px;
@@ -702,8 +703,8 @@ function selectTutor(id) {
 }
 
 .skel--photo {
-  width: 144px;
-  height: 144px;
+  width: 116px;
+  height: 116px;
   flex-shrink: 0;
 }
 
