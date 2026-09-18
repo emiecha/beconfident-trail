@@ -49,7 +49,7 @@
                 </span>
               </span>
               <span class="active__copy">
-                <span class="active__kicker">Your tutor</span>
+                <span class="active__kicker">Your AI tutor</span>
                 <span class="active__name">{{ active.name }}</span>
                 <span class="active__hint">Let’s talk about whatever you want. This is yours — an open, personal conversation.</span>
               </span>
