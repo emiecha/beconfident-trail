@@ -8,14 +8,16 @@
     <div class="home__main">
       <section class="lesson">
         <button class="lesson__card" type="button" @click="$emit('practice')">
-          <img :src="figma('module-continue.png')" width="116" height="116" alt="" />
-          <span class="lesson__copy">
-            <strong>How to go to New York</strong>
-            <span>New York · 1 of 5 activities</span>
-            <span class="lesson__cta">
-              Practice
-              <i class="ri-arrow-right-s-line" />
+          <span class="lesson__top">
+            <img :src="figma('module-continue.png')" width="124" height="124" alt="" />
+            <span class="lesson__copy">
+              <strong>How to go to New York</strong>
+              <span>New York · 1 of 5 activities</span>
             </span>
+          </span>
+          <span class="lesson__cta">
+            Practice
+            <i class="ri-arrow-right-s-line" />
           </span>
         </button>
       </section>
@@ -211,24 +213,36 @@ function selectTutor(id) {
 .lesson {
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
+  flex: 1.2 1 200px;
+  min-height: 0;
 }
 
 .lesson__card {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
   width: 100%;
-  padding: 16px 16px 16px 14px;
+  height: 100%;
+  min-height: 0;
+  padding: 14px;
   border: 1px solid #eeeef1;
   border-radius: 16px;
   text-align: left;
   background: #fff;
 }
 
+.lesson__top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex: 1;
+}
+
 .lesson__card img {
-  width: 116px;
-  height: 116px;
+  width: 124px;
+  height: 124px;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 14px;
@@ -248,7 +262,7 @@ function selectTutor(id) {
   color: #27202c;
 }
 
-.lesson__copy > span:not(.lesson__cta) {
+.lesson__copy span {
   font: 400 14px/1.2 var(--bc-font-sans);
   color: #707070;
 }
@@ -257,12 +271,10 @@ function selectTutor(id) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  align-self: stretch;
   gap: 2px;
   width: 100%;
   height: 40px;
-  margin-top: 6px;
-  padding: 0 16px;
+  flex-shrink: 0;
   border-radius: 12px;
   background: #8134fe;
   color: #fff;
@@ -278,7 +290,8 @@ function selectTutor(id) {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex-shrink: 0;
+  flex: 1 1 158px;
+  min-height: 0;
 }
 
 .active {
@@ -288,7 +301,8 @@ function selectTutor(id) {
   align-items: center;
   text-align: left;
   gap: 14px;
-  flex-shrink: 0;
+  flex: 1;
+  min-height: 0;
 }
 
 .active__hit {
@@ -296,6 +310,7 @@ function selectTutor(id) {
   align-items: center;
   gap: 14px;
   min-width: 0;
+  height: 100%;
   flex: 1;
   padding: 0 8px 0 0;
   text-align: left;
@@ -303,14 +318,16 @@ function selectTutor(id) {
 
 .active__photo {
   position: relative;
-  width: 144px;
-  height: 156px;
+  width: auto;
+  height: 100%;
+  max-height: 164px;
+  aspect-ratio: 144 / 156;
   flex-shrink: 0;
 }
 
 .active__photo > img:first-child {
-  width: 144px;
-  height: 144px;
+  width: 92.3%;
+  height: 92.3%;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 999px;
@@ -400,14 +417,16 @@ function selectTutor(id) {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex-shrink: 0;
+  flex: 0.9 1 190px;
+  min-height: 0;
 }
 
 .masters {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  height: 152px;
+  flex: 1;
+  min-height: 148px;
   overflow: hidden;
 }
 
@@ -415,7 +434,7 @@ function selectTutor(id) {
   position: relative;
   flex: 1;
   min-width: 0;
-  height: 152px;
+  height: 100%;
   overflow: hidden;
   padding: 0;
   border-radius: 16px;
@@ -526,7 +545,6 @@ function selectTutor(id) {
   align-items: center;
   gap: 12px;
   width: 100%;
-  margin-top: auto;
   padding: 8px 12px 8px 8px;
   border: 1px solid #eeeef1;
   border-radius: 16px;
