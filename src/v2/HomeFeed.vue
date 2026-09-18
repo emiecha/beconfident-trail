@@ -54,7 +54,7 @@
                 <span class="active__hint">Let’s talk about whatever you want. This is yours — an open, personal conversation.</span>
               </span>
             </button>
-            <button class="active__switch" type="button" @click.stop="picking = true">
+            <button class="active__switch" type="button" @click.stop="openPicker">
               Switch tutors
               <i class="ri-arrow-right-s-line" />
             </button>
@@ -106,23 +106,62 @@
     </div>
 
     <Transition name="sheet">
-      <div v-if="picking" class="picker" @click.self="picking = false">
-        <div class="picker__sheet" role="dialog" aria-modal="true" aria-label="Switch tutors">
-          <div class="picker__handle" />
-          <h2>Switch tutors</h2>
-          <button
-            v-for="tutor in others"
-            :key="tutor.id"
-            class="picker__tutor"
-            type="button"
-            @click.stop="selectTutor(tutor.id)"
-          >
-            <span class="picker__avatar">
-              <img :src="tutor.photo" width="56" height="56" :alt="tutor.name" />
-              <img :src="tutor.flag" width="16" height="16" alt="" />
-            </span>
-            <span class="picker__name">{{ tutor.name }}</span>
-            <i class="ri-arrow-right-s-line" />
+      <div
+        v-if="picking"
+        class="picker"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="`Switch tutors · ${preview.name}`"
+      >
+        <img class="picker__hero" :src="preview.hero" width="390" height="844" :alt="preview.name" />
+        <div class="picker__scrim" />
+
+        <header class="picker__top">
+          <button class="picker__back" type="button" aria-label="Back" @click="closePicker">
+            <img :src="figma('icon-back.svg')" width="24" height="24" alt="" />
+          </button>
+          <div class="picker__controls">
+            <button class="picker__chip" type="button" @click="paused = !paused">
+              <img :src="figma('icon-pause-twin.svg')" width="16" height="16" alt="" />
+              {{ paused ? 'Play' : 'Pause' }}
+            </button>
+            <button class="picker__chip" type="button" @click="speed = speed === '1x' ? '1.5x' : '1x'">
+              <i class="ri-volume-up-line" />
+              {{ speed }}
+            </button>
+          </div>
+        </header>
+
+        <div class="picker__dock">
+          <div class="picker__voices" role="list">
+            <button
+              v-for="tutor in voices"
+              :key="tutor.id"
+              class="voice"
+              :class="{ 'voice--on': tutor.id === previewId }"
+              type="button"
+              :aria-pressed="tutor.id === previewId"
+              @click="previewId = tutor.id"
+            >
+              <span class="voice__ring">
+                <img :src="tutor.photo" width="82" height="82" alt="" />
+                <img
+                  v-if="tutor.id === previewId"
+                  class="voice__sel"
+                  :src="figma('twin-selector.svg')"
+                  width="88"
+                  height="88"
+                  alt=""
+                />
+                <img class="voice__flag" :src="tutor.flag" width="32" height="32" alt="" />
+              </span>
+              <span v-if="tutor.badge && tutor.id === previewId" class="voice__badge">{{ tutor.badge }}</span>
+              <span class="voice__name">{{ tutor.name }}</span>
+            </button>
+          </div>
+          <button class="picker__cta" type="button" @click="talkPreview">
+            <i class="ri-phone-fill" />
+            Talk with {{ preview.name }}
           </button>
         </div>
       </div>
@@ -134,7 +173,7 @@
 import { figma } from '../figma.js';
 import { computed, ref } from 'vue';
 
-defineEmits(['practice', 'talk', 'be', 'streak', 'twins']);
+const emit = defineEmits(['practice', 'talk', 'be', 'streak', 'twins', 'picking']);
 
 defineProps({
   streakDays: { type: Number, default: 2 },
@@ -142,10 +181,13 @@ defineProps({
 
 const switching = ref(false);
 const picking = ref(false);
+const paused = ref(false);
+const speed = ref('1x');
 const activeId = ref('karina');
+const previewId = ref('karina');
 
 const tutors = [
-  { id: 'karina', name: 'Karina', photo: figma('tutor-karina.png'), hero: figma('activity-tutor.png'), flag: figma('flag-us.png') },
+  { id: 'karina', name: 'Karina', photo: figma('tutor-karina.png'), hero: figma('activity-tutor.png'), flag: figma('flag-us.png'), badge: 'New!' },
   { id: 'mary', name: 'Mary', photo: figma('tutor-mary.png'), hero: figma('tutor-mary.png'), flag: figma('flag-in.png') },
   { id: 'johny', name: 'Johny', photo: figma('tutor-johny.png'), hero: figma('tutor-johny.png'), flag: figma('flag-uk.png') },
   { id: 'geofrey', name: 'Geofrey', photo: figma('tutor-geofrey.png'), hero: figma('tutor-geofrey.png'), flag: figma('flag-au.png') },
@@ -177,18 +219,46 @@ const masters = [
 ];
 
 const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tutors[0]);
-const others = computed(() => tutors.filter((t) => t.id !== activeId.value));
+const preview = computed(() => tutors.find((t) => t.id === previewId.value) ?? active.value);
+const voices = computed(() => {
+  const list = tutors.slice();
+  const i = Math.max(0, list.findIndex((t) => t.id === previewId.value));
+  const shift = (i - 2 + list.length) % list.length;
+  return list.slice(shift).concat(list.slice(0, shift));
+});
+
+function setPicking(value) {
+  picking.value = value;
+  emit('picking', value);
+}
+
+function openPicker() {
+  previewId.value = activeId.value;
+  paused.value = false;
+  speed.value = '1x';
+  setPicking(true);
+}
+
+function closePicker() {
+  const next = previewId.value;
+  setPicking(false);
+  if (next !== activeId.value) selectTutor(next);
+}
+
+function talkPreview() {
+  const next = preview.value;
+  setPicking(false);
+  if (next.id !== activeId.value) activeId.value = next.id;
+  emit('talk', next.name);
+}
 
 function selectTutor(id) {
   if (id === activeId.value || switching.value) return;
-  picking.value = false;
+  switching.value = true;
   window.setTimeout(() => {
-    switching.value = true;
-    window.setTimeout(() => {
-      activeId.value = id;
-      switching.value = false;
-    }, 520);
-  }, 220);
+    activeId.value = id;
+    switching.value = false;
+  }, 520);
 }
 </script>
 
@@ -670,81 +740,195 @@ function selectTutor(id) {
 .picker {
   position: absolute;
   inset: 0;
-  z-index: 11;
-  display: flex;
-  align-items: flex-end;
-  background: rgba(0, 0, 0, 0.45);
+  z-index: 13;
+  overflow: hidden;
+  background: #20044e;
 }
 
-.picker__sheet {
+.picker__hero {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  padding: 12px 20px 36px;
-  border-radius: 24px 24px 0 0;
-  background: #fff;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 12%;
 }
 
-.picker__handle {
+.picker__scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42%;
+  background: linear-gradient(180deg, rgba(15, 19, 25, 0) 0%, rgba(15, 19, 25, 0.4) 42%, rgba(32, 4, 78, 0.72) 100%);
+  pointer-events: none;
+}
+
+.picker__top {
+  position: absolute;
+  top: 71px;
+  left: 18px;
+  right: 18px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.picker__back {
+  display: grid;
+  place-items: center;
   width: 40px;
-  height: 4px;
-  margin: 0 auto 16px;
-  border-radius: 999px;
-  background: #eeeef1;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
+  backdrop-filter: blur(50px);
 }
 
-.picker__sheet h2 {
-  margin-bottom: 12px;
-  font: 600 22px/1.2 var(--bc-font-sans);
-  color: #27202c;
-}
-
-.picker__tutor {
+.picker__controls {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.picker__chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 40px;
+  min-width: 48px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: #fff;
+  color: #27202c;
+  font: 500 14px/17px var(--bc-font-sans);
+}
+
+.picker__chip i {
+  font-size: 20px;
+}
+
+.picker__chip img {
+  width: 16px;
+  height: 16px;
+}
+
+.picker__dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.picker__voices {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
-  padding: 10px 0;
-  text-align: left;
-  border-bottom: 1px solid #eeeef1;
+  padding: 20px 0 16px;
 }
 
-.picker__tutor:last-child {
-  border-bottom: 0;
-}
-
-.picker__avatar {
+.voice {
   position: relative;
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 0;
+  background: none;
 }
 
-.picker__avatar img:first-child {
-  width: 56px;
-  height: 56px;
+.voice__ring {
+  position: relative;
+  display: block;
+  width: 48px;
+  height: 48px;
+}
+
+.voice--on .voice__ring {
+  width: 82px;
+  height: 82px;
+}
+
+.voice__ring > img:first-child {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: 50% 12%;
   border-radius: 999px;
 }
 
-.picker__avatar img:last-child {
+.voice__sel {
+  position: absolute;
+  inset: -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  pointer-events: none;
+}
+
+.voice__flag {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 16px;
-  height: 16px;
-  border: 1.5px solid #fff;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #fff;
   border-radius: 999px;
   object-fit: cover;
 }
 
-.picker__name {
-  flex: 1;
-  font: 500 16px/1.1 var(--bc-font-sans);
-  color: #27202c;
+.voice--on .voice__flag {
+  width: 32px;
+  height: 32px;
 }
 
-.picker__tutor i {
+.voice__badge {
+  position: absolute;
+  top: -10px;
+  left: 58%;
+  z-index: 1;
+  padding: 6px;
+  border-radius: 180px;
+  background: #8134fe;
+  font: 500 12px/1 var(--bc-font-sans);
+  color: #fff;
+  white-space: nowrap;
+}
+
+.voice__name {
+  font: 500 12px/1 var(--bc-font-sans);
+  letter-spacing: -0.32px;
+  color: #fff;
+}
+
+.voice--on .voice__name {
+  font-size: 16px;
+}
+
+.picker__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 350px;
+  height: 48px;
+  border-radius: 12px;
+  background: #20044e;
+  color: #fff;
+  font: 500 14px/1.1 var(--bc-font-sans);
+}
+
+.picker__cta i {
   font-size: 20px;
-  color: #928fa3;
 }
 
 .sheet-enter-active,
@@ -752,19 +936,9 @@ function selectTutor(id) {
   transition: opacity 180ms ease;
 }
 
-.sheet-enter-active .picker__sheet,
-.sheet-leave-active .picker__sheet {
-  transition: transform 220ms ease;
-}
-
 .sheet-enter-from,
 .sheet-leave-to {
   opacity: 0;
-}
-
-.sheet-enter-from .picker__sheet,
-.sheet-leave-to .picker__sheet {
-  transform: translateY(24px);
 }
 
 @keyframes pulse {

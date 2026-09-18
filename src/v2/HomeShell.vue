@@ -10,6 +10,7 @@
       @be="openSheet('be')"
       @streak="openSheet('streak')"
       @twins="openTwins"
+      @picking="pickingTutors = $event"
     />
 
     <ModulesScreen
@@ -27,9 +28,9 @@
 
     <ProfileScreen v-else-if="tab === 'profile'" :add-friends="false" />
 
-    <TabBar v-if="!fullSheet" :tab="tab" @update:tab="tab = $event" />
+    <TabBar v-if="!fullSheet && !pickingTutors" :tab="tab" @update:tab="tab = $event" />
 
-    <div v-if="!fullSheet" class="home-indicator" aria-hidden="true" />
+    <div v-if="!fullSheet && !pickingTutors" class="home-indicator" aria-hidden="true" />
 
     <ActivityPlayer v-if="sheet === 'activity'" @close="closeSheet" @done="openSheet('done')" />
     <BeDoubts v-if="sheet === 'be'" @close="closeSheet" />
@@ -85,6 +86,7 @@ const sheet = ref(null);
 const talkWith = ref('Karina');
 const twinId = ref('brian');
 const streakDays = ref(2);
+const pickingTutors = ref(false);
 
 const fullSheet = computed(
   () =>
@@ -136,6 +138,7 @@ function finishStreak() {
 
 watch(tab, () => {
   sheet.value = null;
+  pickingTutors.value = false;
 });
 </script>
 
