@@ -27,6 +27,17 @@
 
     <ProfileScreen v-else-if="tab === 'profile'" :add-friends="false" />
 
+    <button
+      v-if="showTutorFab"
+      class="fab"
+      type="button"
+      aria-label="Talk to your AI tutor"
+      @click="openTalk('Karina')"
+    >
+      <img :src="figma('activity-tutor.png')" width="80" height="80" alt="" />
+      <span>Talk to your<br />AI tutor</span>
+    </button>
+
     <TabBar v-if="!fullSheet" :tab="tab" @update:tab="tab = $event" />
 
     <div v-if="!fullSheet" class="home-indicator" aria-hidden="true" />
@@ -66,6 +77,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { figma } from '../figma.js';
 import ActivityDone from '../components/ActivityDone.vue';
 import ActivityPlayer from '../components/ActivityPlayer.vue';
 import BeDoubts from '../components/BeDoubts.vue';
@@ -110,6 +122,10 @@ const statusTone = computed(() => {
   }
   return 'dark';
 });
+
+const showTutorFab = computed(
+  () => !fullSheet.value && !sheet.value && tab.value !== 'tutors',
+);
 
 function openSheet(id) {
   sheet.value = id;
@@ -159,6 +175,39 @@ watch(tab, () => {
   background: #000;
   transform: translateX(-50%);
   pointer-events: none;
+}
+
+.fab {
+  position: absolute;
+  right: 16px;
+  bottom: 102px;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 92px;
+  padding: 0;
+  background: none;
+  color: #20044e;
+  text-align: center;
+}
+
+.fab img {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  object-fit: cover;
+  object-position: 50% 18%;
+  box-shadow: 0 0 0 3px #8134fe, 0 14px 32px rgba(129, 52, 254, 0.32);
+}
+
+.fab span {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  font: 600 11px/1.2 var(--bc-font-sans);
+  box-shadow: 0 4px 12px rgba(32, 4, 78, 0.12);
 }
 
 .overlay {
