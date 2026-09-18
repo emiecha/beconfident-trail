@@ -8,8 +8,8 @@
     <div class="tutors__main">
       <section class="active">
         <div class="active__photo">
-          <img :src="active.hero" width="104" height="104" :alt="active.name" />
-          <img class="active__flag" :src="active.flag" width="22" height="22" alt="" />
+          <img :src="active.hero" width="132" height="132" :alt="active.name" />
+          <img class="active__flag" :src="active.flag" width="28" height="28" alt="" />
         </div>
         <div class="active__copy">
           <p class="active__kicker">Your tutor</p>
@@ -38,15 +38,15 @@
             @click="activeId = tutor.id"
           >
             <span class="avatar__img">
-              <img :src="tutor.photo" width="52" height="52" :alt="tutor.name" />
-              <img class="avatar__flag" :src="tutor.flag" width="16" height="16" alt="" />
+              <img :src="tutor.photo" width="64" height="64" :alt="tutor.name" />
+              <img class="avatar__flag" :src="tutor.flag" width="18" height="18" alt="" />
             </span>
             <span>{{ tutor.name }}</span>
           </button>
         </div>
       </section>
 
-      <section class="block">
+      <section class="block block--masters">
         <header class="block__head">
           <div class="block__title">
             <span class="chip">
@@ -68,7 +68,7 @@
             type="button"
             @click="$emit('twins', master.id)"
           >
-            <img class="master__photo" :src="master.photo" width="96" height="140" alt="" />
+            <img class="master__photo" :src="master.photo" width="110" height="210" alt="" />
             <div class="master__scrim" />
             <img class="master__flag" :src="master.flag" width="20" height="20" alt="" />
             <div class="master__copy">
@@ -80,7 +80,7 @@
       </section>
 
       <button class="be" type="button" @click="$emit('be')">
-        <img :src="figma('be-face.svg')" width="56" height="56" alt="" />
+        <img :src="figma('be-face.svg')" width="64" height="64" alt="" />
         <span>
           <strong>Anything you’re unsure about in English?</strong>
           Let’s clear it up.
@@ -173,9 +173,10 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  padding: 58px 16px 8px;
+  padding: 58px 16px 12px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
 }
 
 .tutors:not(.tutors--toast) .tutors__main {
@@ -187,21 +188,20 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
   flex-direction: row;
   align-items: center;
   text-align: left;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 16px;
   flex-shrink: 0;
 }
 
 .active__photo {
   position: relative;
-  width: 104px;
-  height: 104px;
+  width: 132px;
+  height: 132px;
   flex-shrink: 0;
 }
 
 .active__photo > img:first-child {
-  width: 104px;
-  height: 104px;
+  width: 132px;
+  height: 132px;
   object-fit: cover;
   object-position: 50% 18%;
   border-radius: 999px;
@@ -210,10 +210,10 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
 
 .active__flag {
   position: absolute;
-  right: 2px;
-  bottom: 2px;
-  width: 22px;
-  height: 22px;
+  right: 4px;
+  bottom: 4px;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   border: 2px solid #fff;
   object-fit: cover;
@@ -235,27 +235,31 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
 }
 
 .active__copy h1 {
-  margin: 4px 0 8px;
-  font: 600 24px/1.1 var(--bc-font-sans);
+  margin: 6px 0 12px;
+  font: 600 28px/1.1 var(--bc-font-sans);
   color: #27202c;
 }
 
 .active__cta {
-  height: 36px;
-  padding: 0 14px;
+  height: 44px;
+  padding: 0 18px;
   border-radius: 12px;
   background: #8134fe;
   color: #fff;
-  font: 500 13px/1 var(--bc-font-sans);
+  font: 500 14px/1 var(--bc-font-sans);
   box-shadow: 0 10px 30px rgba(129, 52, 254, 0.35);
 }
 
 .block {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 10px;
   flex-shrink: 0;
+}
+
+.block--masters {
+  flex: 1;
+  min-height: 0;
 }
 
 .block__head {
@@ -267,7 +271,7 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
 
 .block__head h2,
 .block__title h2 {
-  font: 500 14px/1.1 var(--bc-font-sans);
+  font: 500 16px/1.1 var(--bc-font-sans);
   color: #000;
 }
 
@@ -312,7 +316,7 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
 
 .row {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -325,21 +329,21 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
   color: #42364a;
-  font: 500 12px/1 var(--bc-font-sans);
+  font: 500 13px/1 var(--bc-font-sans);
 }
 
 .avatar__img {
   position: relative;
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
 }
 
 .avatar__img > img:first-child {
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
   border-radius: 999px;
 }
@@ -348,8 +352,8 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 999px;
   border: 1.5px solid #fff;
   object-fit: cover;
@@ -362,38 +366,35 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
 .masters {
   display: flex;
   gap: 10px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.masters::-webkit-scrollbar {
-  display: none;
+  flex: 1;
+  min-height: 168px;
+  overflow: hidden;
 }
 
 .master {
   position: relative;
-  width: 96px;
-  height: 140px;
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
   overflow: hidden;
   padding: 0;
-  border-radius: 12px;
+  border-radius: 16px;
   background: linear-gradient(180deg, #3e0798, #8134fe);
   text-align: center;
 }
 
 .master__photo {
-  width: 96px;
-  height: 140px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  object-position: 50% 20%;
+  object-position: 50% 18%;
   color: transparent;
 }
 
 .master__scrim {
   position: absolute;
   inset: auto 0 0;
-  height: 70px;
+  height: 46%;
   background: linear-gradient(180deg, transparent, #000);
 }
 
@@ -416,7 +417,7 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
 }
 
 .master__name {
-  font: 600 13px/1.05 var(--bc-font-sans);
+  font: 600 14px/1.05 var(--bc-font-sans);
   letter-spacing: -0.16px;
   color: #fff;
   white-space: pre-line;
@@ -424,17 +425,16 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
 
 .master__role {
   margin-top: 4px;
-  font: 400 11px/1 var(--bc-font-sans);
+  font: 400 12px/1 var(--bc-font-sans);
   color: #e0e0e0;
 }
 
 .be {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  margin-top: auto;
-  padding: 6px 10px 6px 6px;
+  padding: 8px 12px 8px 8px;
   border: 1px solid #eeeef1;
   border-radius: 16px;
   text-align: left;
@@ -442,23 +442,23 @@ const active = computed(() => tutors.find((t) => t.id === activeId.value) ?? tut
 }
 
 .be img {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
 }
 
 .be span {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   flex: 1;
   min-width: 0;
-  font: 400 12px/1.25 var(--bc-font-sans);
+  font: 400 13px/1.3 var(--bc-font-sans);
   color: #42364a;
 }
 
 .be strong {
-  font: 600 13px/1.2 var(--bc-font-sans);
+  font: 600 14px/1.2 var(--bc-font-sans);
   color: #27202c;
 }
 

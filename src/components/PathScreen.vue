@@ -9,9 +9,9 @@
         </button>
       </div>
       <h1>Your path</h1>
-      <p class="path__progress-label">{{ stepped ? '10 of 24 activities · 200 XP' : '9 of 24 activities · 180 XP' }}</p>
+      <p class="path__progress-label">{{ phase >= 1 ? '10 of 24 activities · 200 XP' : '9 of 24 activities · 180 XP' }}</p>
       <div class="path__bar" aria-hidden="true">
-        <span :style="{ width: stepped ? '42%' : '38%' }" />
+        <span :style="{ width: phase >= 1 ? '42%' : '38%' }" />
       </div>
     </header>
 
@@ -20,7 +20,7 @@
         v-for="mod in modules"
         :key="mod.id"
         class="mod"
-        :class="[`mod--${mod.state}`, { 'mod--open': isOpen(mod) }]"
+        :class="[`mod--${mod.state}`, { 'mod--open': isOpen(mod), 'mod--bump': phase >= 2 && mod.id === 'nyc' }]"
       >
         <div class="mod__rail" aria-hidden="true">
           <span class="mod__node">
@@ -64,8 +64,9 @@
               :class="[
                 `lesson--${lesson.state}`,
                 {
-                  'lesson--pop': stepped && lesson.id === 'l4',
-                  'lesson--arrive': stepped && lesson.id === 'l5',
+                  'lesson--pop': phase >= 1 && lesson.id === 'l4',
+                  'lesson--travel': phase === 1 && lesson.id === 'l4',
+                  'lesson--arrive': phase >= 2 && lesson.id === 'l5',
                 },
               ]"
             >
@@ -107,26 +108,37 @@ const props = defineProps({
   streakDays: { type: Number, default: 2 },
 });
 
-const stepped = ref(false);
-let stepTimer;
+const phase = ref(0);
+const timers = [];
+
+function later(fn, ms) {
+  timers.push(setTimeout(fn, ms));
+}
+
+function clearTimers() {
+  timers.splice(0).forEach(clearTimeout);
+}
 
 watch(
   () => props.advanced,
   (next) => {
-    clearTimeout(stepTimer);
+    clearTimers();
     if (!next) {
-      stepped.value = false;
+      phase.value = 0;
       return;
     }
-    stepped.value = false;
-    stepTimer = setTimeout(() => {
-      stepped.value = true;
-    }, 480);
+    phase.value = 0;
+    later(() => {
+      phase.value = 1;
+    }, 700);
+    later(() => {
+      phase.value = 2;
+    }, 2200);
   },
   { immediate: true },
 );
 
-onBeforeUnmount(() => clearTimeout(stepTimer));
+onBeforeUnmount(() => clearTimers());
 
 const modules = computed(() => [
   {
@@ -153,17 +165,17 @@ const modules = computed(() => [
     state: 'current',
     title: 'New York',
     kicker: 'Module 2',
-    meta: stepped.value ? '4 of 6 · 80 XP' : '3 of 6 · 60 XP',
-    progress: stepped.value ? '67%' : '50%',
-    currentIndex: stepped.value ? 4 : 3,
+    meta: phase.value >= 2 ? '4 of 6 · 80 XP' : '3 of 6 · 60 XP',
+    progress: phase.value >= 1 ? '67%' : '50%',
+    currentIndex: phase.value >= 2 ? 4 : 3,
     icon: 'ri-building-4-line',
     tint: 'linear-gradient(135deg, #20044e, #8134fe)',
     lessons: [
       { id: 'l1', state: 'done', title: 'Book the flight', xp: 20 },
       { id: 'l2', state: 'done', title: 'At the gate', xp: 20 },
       { id: 'l3', state: 'done', title: 'Meet your host', xp: 20 },
-      { id: 'l4', state: stepped.value ? 'done' : 'current', title: 'Let’s travel to New York', xp: 20 },
-      { id: 'l5', state: stepped.value ? 'current' : 'locked', title: 'Order coffee', xp: 20 },
+      { id: 'l4', state: phase.value >= 1 ? 'done' : 'current', title: 'Let’s travel to New York', xp: 20 },
+      { id: 'l5', state: phase.value >= 2 ? 'current' : 'locked', title: 'Order coffee', xp: 20 },
       { id: 'l6', state: 'locked', title: 'Ask for directions', xp: 20 },
     ],
   },
@@ -297,7 +309,7 @@ function toggle(mod) {
   height: 100%;
   border-radius: 999px;
   background: #82e39c;
-  transition: width 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .path__scroll {
@@ -369,6 +381,23 @@ function toggle(mod) {
   border-color: #20044e;
   color: #fff;
   box-shadow: 0 0 0 4px rgba(129, 52, 254, 0.18);
+}
+
+.mod--bump .mod__node {
+  animation: node-bump 900ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+@keyframes node-bump {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 8px rgba(129, 52, 254, 0.28);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .mod--locked .mod__node {
@@ -485,7 +514,7 @@ function toggle(mod) {
   height: 100%;
   border-radius: 999px;
   background: #8134fe;
-  transition: width 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .mod--locked .card__track span {
@@ -503,6 +532,7 @@ function toggle(mod) {
 }
 
 .lesson {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -512,9 +542,9 @@ function toggle(mod) {
   font: 500 14px/1.2 var(--bc-font-sans);
   color: #27202c;
   transition:
-    background 400ms ease,
-    color 400ms ease,
-    transform 400ms ease;
+    background 600ms ease,
+    color 600ms ease,
+    transform 600ms ease;
 }
 
 .lesson i {
@@ -561,40 +591,79 @@ function toggle(mod) {
 }
 
 .lesson--pop i {
-  animation: check-pop 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
+  animation: check-pop 900ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.lesson--travel::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #8134fe;
+  box-shadow: 0 0 0 6px rgba(129, 52, 254, 0.28), 0 0 18px rgba(129, 52, 254, 0.55);
+  animation: lesson-spark 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  pointer-events: none;
 }
 
 .lesson--arrive {
-  animation: lesson-arrive 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: lesson-arrive 1.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .lesson--arrive .lesson__cta {
-  animation: cta-in 420ms 180ms both cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: cta-in 700ms 200ms both cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes check-pop {
   0% {
-    transform: scale(0.4);
-    opacity: 0.2;
+    transform: scale(0.35);
+    opacity: 0;
+    filter: drop-shadow(0 0 0 #8134fe);
   }
-  70% {
-    transform: scale(1.18);
+  45% {
+    transform: scale(1.35);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(129, 52, 254, 0.7));
   }
   100% {
     transform: scale(1);
     opacity: 1;
+    filter: none;
+  }
+}
+
+@keyframes lesson-spark {
+  0% {
+    top: 50%;
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  12% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    top: calc(100% + 18px);
+    opacity: 0.2;
+    transform: scale(0.8);
   }
 }
 
 @keyframes lesson-arrive {
-  from {
-    transform: translateY(6px);
-    box-shadow: 0 0 0 0 rgba(129, 52, 254, 0.35);
+  0% {
+    transform: translateY(10px);
+    box-shadow: 0 0 0 0 rgba(129, 52, 254, 0.55);
   }
-  50% {
-    box-shadow: 0 0 0 6px rgba(129, 52, 254, 0.16);
+  35% {
+    transform: none;
+    box-shadow: 0 0 0 10px rgba(129, 52, 254, 0.22);
   }
-  to {
+  70% {
+    box-shadow: 0 0 0 4px rgba(129, 52, 254, 0.18);
+  }
+  100% {
     transform: none;
     box-shadow: 0 0 0 0 rgba(129, 52, 254, 0);
   }
@@ -602,8 +671,11 @@ function toggle(mod) {
 
 @keyframes cta-in {
   from {
-    transform: scale(0.86);
+    transform: scale(0.7);
     opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
   }
   to {
     transform: none;

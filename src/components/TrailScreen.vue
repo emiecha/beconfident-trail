@@ -9,65 +9,90 @@
     </div>
 
     <div ref="scroller" class="trail__scroll">
-      <p class="trail__section">New York</p>
+      <template v-for="item in items" :key="item.id">
+        <p v-if="item.kind === 'section'" class="trail__section">
+          {{ item.title }}
+          <span v-if="item.locked" class="trail__lock">
+            <i class="ri-lock-2-line" />
+            Locked
+          </span>
+        </p>
 
-      <div
-        v-for="node in nodes"
-        :key="node.id"
-        class="row"
-        :class="[`row--${node.align}`, `row--${node.state}`, { 'row--fresh': stepped && (node.id === 'n4' || node.id === 'n5') }]"
-        :ref="(el) => { if (node.state === 'current') setCurrent(el) }"
-      >
-        <button
-          v-if="node.state === 'done'"
-          class="dot dot--done"
-          type="button"
-          :aria-label="`${node.title}, completed`"
+        <div
+          v-else
+          class="row"
+          :class="[
+            `row--${item.align}`,
+            `row--${item.state}`,
+            {
+              'row--leaving': phase === 1 && item.id === 'n4',
+              'row--travel': phase === 2 && item.id === 'n4',
+              'row--unlocking': phase === 2 && item.id === 'n5',
+              'row--landing': phase >= 3 && item.id === 'n5',
+            },
+          ]"
+          :ref="(el) => { if (item.state === 'current') setCurrent(el) }"
         >
-          <i class="ri-check-line" />
-          <span>{{ node.title }}</span>
-        </button>
+          <button
+            v-if="item.state === 'done'"
+            class="dot dot--done"
+            type="button"
+            :aria-label="`${item.title}, completed`"
+          >
+            <i class="ri-check-line" />
+            <span>{{ item.title }}</span>
+          </button>
 
-        <article v-else-if="node.state === 'current'" class="current">
-          <img class="current__bg" :src="figma('hero-nyc.png')" width="350" height="210" alt="" />
-          <div class="current__scrim" />
-          <div class="current__body">
-            <img
-              class="current__photo"
-              :src="figma('activity-tutor.png')"
-              width="88"
-              height="132"
-              alt=""
-            />
-            <div class="current__copy">
-              <p class="current__eyebrow">Activity {{ currentIndex }} of 6</p>
-              <h2>{{ node.title }}</h2>
-              <button class="current__cta" type="button" @click="$emit('start')">
-                <span>Start</span>
-                <img :src="figma('icon-play.svg')" width="20" height="20" alt="" />
-              </button>
+          <article
+            v-else-if="item.state === 'current'"
+            class="current"
+            :class="{ 'current--leaving': phase === 1 && item.id === 'n4' }"
+          >
+            <img class="current__bg" :src="figma('hero-nyc.png')" width="350" height="210" alt="" />
+            <div class="current__scrim" />
+            <div class="current__check" v-if="phase === 1 && item.id === 'n4'" aria-hidden="true">
+              <i class="ri-check-line" />
             </div>
-          </div>
-        </article>
+            <div class="current__body">
+              <img
+                class="current__photo"
+                :src="figma('activity-tutor.png')"
+                width="88"
+                height="132"
+                alt=""
+              />
+              <div class="current__copy">
+                <p class="current__eyebrow">Activity {{ currentIndex }} of 6</p>
+                <h2>{{ item.title }}</h2>
+                <button class="current__cta" type="button" @click="$emit('start')">
+                  <span>Start</span>
+                  <img :src="figma('icon-play.svg')" width="20" height="20" alt="" />
+                </button>
+              </div>
+            </div>
+          </article>
 
-        <button
-          v-else-if="node.state === 'locked'"
-          class="dot dot--locked"
-          type="button"
-          disabled
-          :aria-label="`${node.title}, locked`"
-        >
-          <i class="ri-lock-2-line" />
-          <span>{{ node.title }}</span>
-        </button>
+          <button
+            v-else-if="item.state === 'locked'"
+            class="dot dot--locked"
+            type="button"
+            disabled
+            :aria-label="`${item.title}, locked`"
+          >
+            <i class="ri-lock-2-line" />
+            <span>{{ item.title }}</span>
+          </button>
 
-        <div v-else class="checkpoint">
-          <div class="checkpoint__gem">
-            <i class="ri-award-fill" />
+          <div v-else class="checkpoint">
+            <div class="checkpoint__gem">
+              <i class="ri-award-fill" />
+            </div>
+            <span>Module complete</span>
           </div>
-          <span>Module complete</span>
+
+          <span v-if="phase === 2 && item.id === 'n4'" class="spark" aria-hidden="true" />
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -83,37 +108,66 @@ const props = defineProps({
   streakDays: { type: Number, default: 2 },
 });
 
-const stepped = ref(false);
-let stepTimer;
+const phase = ref(0);
+const timers = [];
+
+function later(fn, ms) {
+  timers.push(setTimeout(fn, ms));
+}
+
+function clearTimers() {
+  timers.splice(0).forEach(clearTimeout);
+}
 
 watch(
   () => props.advanced,
   (next) => {
-    clearTimeout(stepTimer);
+    clearTimers();
     if (!next) {
-      stepped.value = false;
+      phase.value = 0;
       return;
     }
-    stepped.value = false;
-    stepTimer = setTimeout(() => {
-      stepped.value = true;
-    }, 480);
+    phase.value = 0;
+    later(() => {
+      phase.value = 1;
+    }, 700);
+    later(() => {
+      phase.value = 2;
+    }, 1800);
+    later(() => {
+      phase.value = 3;
+    }, 3200);
   },
   { immediate: true },
 );
 
-onBeforeUnmount(() => clearTimeout(stepTimer));
+onBeforeUnmount(() => clearTimers());
 
-const currentIndex = computed(() => (stepped.value ? 4 : 3));
+const currentIndex = computed(() => (phase.value >= 3 ? 4 : 3));
 
-const nodes = computed(() => [
+const items = computed(() => [
+  { id: 'sec-nyc', kind: 'section', title: 'New York' },
   { id: 'n1', state: 'done', title: 'Book the flight', align: 'left' },
   { id: 'n2', state: 'done', title: 'At the gate', align: 'center' },
   { id: 'n3', state: 'done', title: 'Meet your host', align: 'right' },
-  { id: 'n4', state: stepped.value ? 'done' : 'current', title: 'Let’s travel to New York', align: 'center' },
-  { id: 'n5', state: stepped.value ? 'current' : 'locked', title: 'Order coffee', align: 'left' },
+  { id: 'n4', state: phase.value >= 2 ? 'done' : 'current', title: 'Let’s travel to New York', align: 'center' },
+  { id: 'n5', state: phase.value >= 3 ? 'current' : 'locked', title: 'Order coffee', align: 'left' },
   { id: 'n6', state: 'locked', title: 'Ask for directions', align: 'center' },
   { id: 'n7', state: 'checkpoint', title: 'Module complete', align: 'center' },
+  { id: 'sec-hotel', kind: 'section', title: 'At the hotel', locked: true },
+  { id: 'h1', state: 'locked', title: 'Check in at reception', align: 'left' },
+  { id: 'h2', state: 'locked', title: 'Ask for the wifi', align: 'center' },
+  { id: 'h3', state: 'locked', title: 'Request extra towels', align: 'right' },
+  { id: 'h4', state: 'locked', title: 'Report a problem', align: 'center' },
+  { id: 'h5', state: 'locked', title: 'Order room service', align: 'left' },
+  { id: 'h6', state: 'locked', title: 'Check out', align: 'center' },
+  { id: 'sec-city', kind: 'section', title: 'Getting around', locked: true },
+  { id: 'c1', state: 'locked', title: 'Buy a metro ticket', align: 'right' },
+  { id: 'c2', state: 'locked', title: 'Ask which line to take', align: 'center' },
+  { id: 'c3', state: 'locked', title: 'Change trains', align: 'left' },
+  { id: 'c4', state: 'locked', title: 'Missed your stop', align: 'center' },
+  { id: 'c5', state: 'locked', title: 'Take a taxi', align: 'right' },
+  { id: 'c6', state: 'locked', title: 'Read a map', align: 'center' },
 ]);
 
 const scroller = ref(null);
@@ -128,8 +182,8 @@ onMounted(async () => {
   scrollToCurrent(false);
 });
 
-watch(stepped, async (next) => {
-  if (!next) return;
+watch(phase, async (next) => {
+  if (next < 3) return;
   await nextTick();
   scrollToCurrent(true);
 });
@@ -198,8 +252,9 @@ function scrollToCurrent(smooth) {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 8px 0 120px;
+  padding: 8px 0 160px;
   scrollbar-width: none;
+  overscroll-behavior: contain;
 }
 
 .trail__scroll::-webkit-scrollbar {
@@ -207,11 +262,37 @@ function scrollToCurrent(smooth) {
 }
 
 .trail__section {
-  padding: 8px 20px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 28px 20px 16px;
   font: 500 11px/1 var(--bc-font-sans);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #77738c;
+}
+
+.trail__section:first-child {
+  padding-top: 8px;
+}
+
+.trail__lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #eeeef1;
+  color: #928fa3;
+  font: 500 10px/1 var(--bc-font-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.trail__lock i {
+  font-size: 12px;
 }
 
 .row {
@@ -219,6 +300,7 @@ function scrollToCurrent(smooth) {
   display: flex;
   width: 100%;
   padding: 10px 36px;
+  overflow: visible;
 }
 
 .row--left {
@@ -314,21 +396,82 @@ function scrollToCurrent(smooth) {
   box-shadow: 0 10px 30px rgba(129, 52, 254, 0.28);
 }
 
-.row--fresh.row--done .dot--done i {
-  animation: check-pop 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
+.current--leaving {
+  animation: current-leave 1.05s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.row--fresh.row--current .current {
-  animation: card-arrive 620ms cubic-bezier(0.2, 0.8, 0.2, 1);
+.current__check {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  background: rgba(32, 4, 78, 0.28);
+}
+
+.current__check i {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: #8134fe;
+  color: #fff;
+  font-size: 36px;
+  box-shadow: 0 0 0 12px rgba(129, 52, 254, 0.28), 0 16px 40px rgba(129, 52, 254, 0.45);
+  animation: check-pop 900ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.row--travel .dot--done i {
+  animation: check-pop 900ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+.row--unlocking .dot--locked i {
+  animation: unlock-pulse 1.3s ease-in-out infinite;
+  color: #8134fe;
+  background: #f2ebff;
+}
+
+.row--landing .current {
+  animation: card-arrive 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.spark {
+  position: absolute;
+  z-index: 5;
+  top: 58%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #8134fe;
+  box-shadow: 0 0 0 8px rgba(129, 52, 254, 0.28), 0 0 22px 6px rgba(129, 52, 254, 0.5);
+  pointer-events: none;
+  animation: spark-move 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes current-leave {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  35% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(0.78);
+    opacity: 0.2;
+  }
 }
 
 @keyframes check-pop {
   0% {
-    transform: scale(0.4);
-    opacity: 0.2;
+    transform: scale(0.3);
+    opacity: 0;
   }
-  70% {
-    transform: scale(1.18);
+  50% {
+    transform: scale(1.22);
+    opacity: 1;
   }
   100% {
     transform: scale(1);
@@ -336,14 +479,49 @@ function scrollToCurrent(smooth) {
   }
 }
 
+@keyframes unlock-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(129, 52, 254, 0.35);
+  }
+  50% {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 10px rgba(129, 52, 254, 0.12);
+  }
+}
+
 @keyframes card-arrive {
   from {
-    transform: translateY(18px) scale(0.96);
-    opacity: 0.35;
+    transform: translateY(28px) scale(0.86);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(-6px) scale(1.03);
+    opacity: 1;
   }
   to {
     transform: none;
     opacity: 1;
+  }
+}
+
+@keyframes spark-move {
+  0% {
+    top: 55%;
+    left: 50%;
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.4);
+  }
+  14% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.25);
+  }
+  100% {
+    top: calc(100% + 52px);
+    left: 80px;
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
   }
 }
 
