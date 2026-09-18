@@ -378,6 +378,7 @@ function selectTutor(id) {
 .tutor {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 10px;
   flex: 1 1 148px;
   min-height: 0;
@@ -391,7 +392,7 @@ function selectTutor(id) {
   align-items: flex-start;
   text-align: left;
   gap: 14px;
-  flex: 1;
+  flex: 0 1 auto;
   min-height: 0;
 }
 
@@ -400,7 +401,6 @@ function selectTutor(id) {
   align-items: flex-start;
   gap: 14px;
   min-width: 0;
-  height: 100%;
   flex: 1;
   padding: 0 8px 0 0;
   text-align: left;
