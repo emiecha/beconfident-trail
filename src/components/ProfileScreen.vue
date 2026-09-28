@@ -44,6 +44,12 @@
       Add friends
     </button>
 
+    <button v-if="showStore" class="add add--store" type="button" @click="$emit('store')">
+      <i class="ri-store-2-line" />
+      Store
+      <span>340 coins</span>
+    </button>
+
     <section class="streak">
       <div class="streak__flame">
         <img :src="figma('icon-flame-lg.svg')" width="28" height="28" alt="" />
@@ -95,7 +101,7 @@
     <section class="block">
       <header class="block__head">
         <h3>Achievements</h3>
-        <button class="link" type="button">See passport</button>
+        <button class="link" type="button" @click="$emit('passport')">See passport</button>
       </header>
       <div class="stamps">
         <article class="stamp stamp--blue">
@@ -222,9 +228,10 @@
 <script setup>
 import { figma } from '../figma.js';
 
-defineEmits(['invite']);
+defineEmits(['invite', 'store', 'passport']);
 defineProps({
   addFriends: { type: Boolean, default: true },
+  showStore: { type: Boolean, default: false },
 });
 
 const friends = [
@@ -399,9 +406,22 @@ const words = [
   font: 500 16px/1.1 var(--bc-font-sans);
 }
 
-.add img {
+.add img,
+.add i {
   width: 20px;
   height: 20px;
+  font-size: 20px;
+}
+
+.add--store {
+  justify-content: space-between;
+  padding: 0 16px;
+  background: #8134fe;
+}
+
+.add--store span {
+  font: 500 13px/1 var(--bc-font-sans);
+  opacity: 0.85;
 }
 
 .streak {

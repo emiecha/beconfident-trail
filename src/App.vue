@@ -13,6 +13,9 @@
         <button type="button" :class="{ 'is-on': version === '3' }" @click="setVersion('3')">
           3 · Modules
         </button>
+        <button type="button" :class="{ 'is-on': version === '4' }" @click="setVersion('4')">
+          4 · Loops
+        </button>
       </div>
       <div
         v-if="version === '1'"
@@ -39,7 +42,8 @@
     <div class="phone">
       <HomeScreen v-if="version === '1'" :variant="pathVariant" />
       <HomeShell v-else-if="version === '2'" />
-      <ModulesFirstShell v-else />
+      <ModulesFirstShell v-else-if="version === '3'" />
+      <PathLoopShell v-else />
     </div>
   </div>
 </template>
@@ -49,10 +53,11 @@ import { computed, ref } from 'vue';
 import HomeScreen from './components/HomeScreen.vue';
 import HomeShell from './v2/HomeShell.vue';
 import ModulesFirstShell from './v3/Shell.vue';
+import PathLoopShell from './v4/Shell.vue';
 
 function defaultVersion() {
   const query = new URLSearchParams(location.search).get('v');
-  if (query === '1' || query === '2' || query === '3') return query;
+  if (query === '1' || query === '2' || query === '3' || query === '4') return query;
   if (location.pathname.includes('home')) return '2';
   return '1';
 }
@@ -63,12 +68,14 @@ const pathVariant = ref('path');
 const title = computed(() => {
   if (version.value === '2') return 'BeConfident · Home';
   if (version.value === '3') return 'BeConfident · Modules';
+  if (version.value === '4') return 'BeConfident · Path is Home';
   return pathVariant.value === 'path' ? 'BeConfident · Path' : 'BeConfident · Trail';
 });
 
 const subtitle = computed(() => {
   if (version.value === '2') return 'Practice first · talk with your tutor second';
   if (version.value === '3') return 'Practice on the trail · tutors one tap away';
+  if (version.value === '4') return 'Trail A1 · start the next activity';
   return pathVariant.value === 'path' ? 'Option B · modules as cards' : 'Option A · winding trail';
 });
 
