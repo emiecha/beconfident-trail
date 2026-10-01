@@ -147,8 +147,7 @@ img {
   }
 
   .studio--v2 .studio__meta,
-  .studio--v3 .studio__meta,
-  .studio--v4 .studio__meta {
+  .studio--v3 .studio__meta {
     display: none;
   }
 

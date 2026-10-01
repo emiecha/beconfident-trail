@@ -11,7 +11,7 @@
         @click="$emit('invite')"
       />
       <InviteFriendsTile label="Ranking" :icon="figma('icon-trophy.svg')" @click="$emit('ranking')" />
-      <InviteFriendsTile label="Passport" remix="ri-passport-line" @click="$emit('passport')" />
+      <InviteFriendsTile label="Passport" remix="ri-passport-line" />
     </div>
 
     <div v-if="!plainEvents" class="tabs" role="tablist" aria-label="Community sections">
@@ -141,7 +141,7 @@ import { figma } from '../figma.js';
 import { ref } from 'vue';
 import InviteFriendsTile from './InviteFriendsTile.vue';
 
-defineEmits(['invite', 'ranking', 'passport']);
+defineEmits(['invite', 'ranking']);
 
 defineProps({
   plainEvents: { type: Boolean, default: false },

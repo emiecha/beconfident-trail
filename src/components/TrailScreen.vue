@@ -1,7 +1,7 @@
 <template>
   <div class="trail">
     <div class="trail__chrome">
-      <p class="trail__crumb">{{ crumb }}</p>
+      <p class="trail__crumb">B1 · Travel · New York · {{ currentIndex }} of 6</p>
       <button class="streak" type="button" @click="$emit('streak')">
         <img class="streak__icon" :src="figma('icon-flame.svg')" width="16" height="16" alt="" />
         <span>{{ streakDays }} days</span>
@@ -73,17 +73,6 @@
           </article>
 
           <button
-            v-else-if="item.state === 'talk'"
-            class="dot dot--talk"
-            type="button"
-            :aria-label="item.title"
-            @click="$emit('talk', 'Karina')"
-          >
-            <img :src="figma('activity-tutor.png')" width="56" height="56" alt="" />
-            <span>{{ item.title }}</span>
-          </button>
-
-          <button
             v-else-if="item.state === 'locked'"
             class="dot dot--locked"
             type="button"
@@ -112,13 +101,11 @@
 import { figma } from '../figma.js';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-defineEmits(['start', 'streak', 'talk']);
+defineEmits(['start', 'streak']);
 
 const props = defineProps({
   advanced: { type: Boolean, default: false },
   streakDays: { type: Number, default: 2 },
-  level: { type: String, default: 'b1' },
-  talkNode: { type: Boolean, default: false },
 });
 
 const phase = ref(0);
@@ -158,20 +145,11 @@ onBeforeUnmount(() => clearTimers());
 
 const currentIndex = computed(() => (phase.value >= 3 ? 4 : 3));
 
-const crumb = computed(() => {
-  const place = `New York · ${currentIndex.value} of 6`;
-  if (props.level === 'a1') return `A1 · Confident Beginnings · ${place}`;
-  return `B1 · Travel · ${place}`;
-});
-
 const items = computed(() => [
   { id: 'sec-nyc', kind: 'section', title: 'New York' },
   { id: 'n1', state: 'done', title: 'Book the flight', align: 'left' },
   { id: 'n2', state: 'done', title: 'At the gate', align: 'center' },
   { id: 'n3', state: 'done', title: 'Meet your host', align: 'right' },
-  ...(props.talkNode
-    ? [{ id: 'talk', state: 'talk', title: 'Talk with Karina', align: 'left' }]
-    : []),
   { id: 'n4', state: phase.value >= 2 ? 'done' : 'current', title: 'Let’s travel to New York', align: 'center' },
   { id: 'n5', state: phase.value >= 3 ? 'current' : 'locked', title: 'Order coffee', align: 'left' },
   { id: 'n6', state: 'locked', title: 'Ask for directions', align: 'center' },
@@ -366,10 +344,6 @@ function scrollToCurrent(smooth) {
   right: 80px;
 }
 
-.row--talk:not(:last-child)::after {
-  left: 80px;
-}
-
 .row--done:not(:last-child)::after {
   background: #8134fe;
 }
@@ -410,15 +384,6 @@ function scrollToCurrent(smooth) {
 .dot--locked i {
   background: #eeeef1;
   color: #928fa3;
-}
-
-.dot--talk img {
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  object-fit: cover;
-  object-position: 50% 18%;
-  box-shadow: 0 0 0 3px #8134fe, 0 8px 20px rgba(129, 52, 254, 0.28);
 }
 
 .current {
